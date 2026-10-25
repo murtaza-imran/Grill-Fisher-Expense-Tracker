@@ -908,3 +908,10 @@ body { -webkit-tap-highlight-color: transparent; }
   /* bottom bar: Add is a gold circle again, in line with the other tabs */
   .bnav-plus { width: 46px; height: 46px; border-radius: 50%; margin-top: -10px; box-shadow: 0 6px 18px rgba(232, 169, 26, .45), 0 0 0 4px rgba(12, 9, 6, .95); }
 }
+
+@media (max-width: 960px) {
+  /* Reports: quick ranges look like the chips on Sales / Expenses */
+  .page-reports .bar > .toolbar .seg { display: flex; gap: 6px; padding: 2px 0; background: none; border: 0; border-radius: 0; }
+  .page-reports .bar > .toolbar .seg a, .page-reports .bar > .toolbar .seg button { flex-shrink: 0; display: inline-flex; align-items: center; height: 36px; padding: 0 14px; border-radius: 999px; background: var(--tile); border: 1px solid var(--line); color: var(--muted); font-size: 13px; font-weight: 600; box-shadow: none; }
+  .page-reports .bar > .toolbar .seg a.on, .page-reports .bar > .toolbar .seg button.on { background: var(--gold-soft); border-color: var(--gold-line); color: var(--gold-2); box-shadow: none; }
+}
