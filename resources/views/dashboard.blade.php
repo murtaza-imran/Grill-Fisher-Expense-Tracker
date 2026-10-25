@@ -51,11 +51,11 @@
 
     <div class="mh-actions">
       <a href="{{ route('sales.create') }}" data-modal-form class="mh-btn sale">
-        <span class="mh-ic"><x-icon name="plus" size="22" /></span>
+        <span class="mh-ic"><x-icon name="plus" size="18" /></span>
         <span class="mh-txt"><b>New sale</b><small>Add a sale</small></span>
       </a>
       <a href="{{ route('expenses.create') }}" data-modal-form class="mh-btn exp">
-        <span class="mh-ic"><x-icon name="plus" size="22" /></span>
+        <span class="mh-ic"><x-icon name="plus" size="18" /></span>
         <span class="mh-txt"><b>Expense</b><small>Money spent</small></span>
       </a>
     </div>

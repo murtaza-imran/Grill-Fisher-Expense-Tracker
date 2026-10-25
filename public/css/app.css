@@ -894,3 +894,17 @@ body { -webkit-tap-highlight-color: transparent; }
   .bnav a { gap: 4px; }
   .bnav a:not(.bnav-add) .ic { margin-bottom: 5px; }
 }
+
+@media (max-width: 960px) {
+  /* home: small pill buttons (like the regular buttons) */
+  .mh-actions { gap: 8px; margin-bottom: 14px; }
+  .mh-btn { height: 46px; padding: 0 16px; gap: 8px; justify-content: center; border-radius: 999px; }
+  .mh-btn .mh-ic { width: auto; height: auto; border-radius: 0; background: none !important; }
+  .mh-btn.exp .mh-ic { color: var(--text); }
+  .mh-txt b { font-size: 14.5px; font-weight: 600; letter-spacing: 0; }
+  .mh-txt small { display: none; }
+  .mh-btn.exp { background: var(--tile); }
+
+  /* bottom bar: Add is a gold circle again, in line with the other tabs */
+  .bnav-plus { width: 46px; height: 46px; border-radius: 50%; margin-top: -10px; box-shadow: 0 6px 18px rgba(232, 169, 26, .45), 0 0 0 4px rgba(12, 9, 6, .95); }
+}
