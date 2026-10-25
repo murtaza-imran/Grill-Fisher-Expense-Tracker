@@ -27,7 +27,12 @@
       <table class="tbl cards">
         <thead><tr><th>Date</th><th>Items</th><th>Customer</th><th>Payment</th><th class="num">Amount</th><th></th></tr></thead>
         <tbody>
+          @php $lastDay = null; $pageRows = $sales->getCollection(); @endphp
           @forelse ($sales as $s)
+            @if ($s->date->toDateString() !== $lastDay)
+              @php $lastDay = $s->date->toDateString(); $d = $s->date; $dayRows = $pageRows->filter(fn ($x) => $x->date->toDateString() === $lastDay); @endphp
+              <tr class="grp"><td colspan="6"><span>{{ $d->isToday() ? 'Today' : ($d->isYesterday() ? 'Yesterday' : $d->format('D, j M')) }}</span><b>{{ $rs($dayRows->sum('total')) }} · {{ $dayRows->count() }} {{ Str::plural('order', $dayRows->count()) }}</b></td></tr>
+            @endif
             <tr>
               <td class="date c-date">{{ $s->date->format('j M Y') }}</td>
               <td class="c-title">{{ $s->summary() }}</td>

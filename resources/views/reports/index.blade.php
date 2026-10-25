@@ -49,7 +49,12 @@
       <table class="tbl cards">
         <thead><tr><th>Date</th><th>Type</th><th>Detail</th><th>Customer / paid to</th><th>Payment / status</th><th class="num">Amount</th><th></th></tr></thead>
         <tbody>
+          @php $lastDay = null; @endphp
           @forelse ($rows as $r)
+            @if ($r['date'] !== $lastDay)
+              @php $lastDay = $r['date']; $d = \Carbon\Carbon::parse($r['date']); $net = collect($rows->items())->where('date', $lastDay)->sum('amount'); @endphp
+              <tr class="grp"><td colspan="7"><span>{{ $d->isToday() ? 'Today' : ($d->isYesterday() ? 'Yesterday' : $d->format('D, j M')) }}</span><b class="{{ $net < 0 ? 'neg' : 'pos' }}">{{ $net < 0 ? '−' : '+' }}{{ $rs(abs($net)) }}</b></td></tr>
+            @endif
             <tr>
               <td class="date c-date">{{ \Carbon\Carbon::parse($r['date'])->format('j M Y') }}</td>
               <td class="c-type">{{ $r['type'] }}</td>

@@ -4,8 +4,8 @@
 
 @section('content')
   <div class="grid2 top">
-    <div class="card">
-      <div class="set-head"><span class="kpi-ic gold"><x-icon name="utensils" size="16" /></span><div><h3>Menu items</h3><p>Prices used when you tap an item on the sale screen.</p></div></div>
+    <div class="card" data-acc>
+      <div class="set-head"><span class="kpi-ic gold"><x-icon name="utensils" size="16" /></span><div><h3>Menu items <span class="cnt">{{ $items->count() }}</span></h3><p>Prices used when you tap an item on the sale screen.</p></div><span class="acc-chev mobile-only"><x-icon name="chevron-down" size="18" /></span></div>
       @foreach ($items as $it)
         <form method="POST" action="{{ route('settings.items.update', $it) }}" class="item-edit">
           @csrf @method('PUT')
@@ -25,8 +25,8 @@
     </div>
 
     <div>
-      <div class="card">
-        <div class="set-head"><span class="kpi-ic blue"><x-icon name="tag" size="16" /></span><div><h3>Expense categories</h3><p>Used when you add an expense.</p></div></div>
+      <div class="card" data-acc>
+        <div class="set-head"><span class="kpi-ic blue"><x-icon name="tag" size="16" /></span><div><h3>Expense categories <span class="cnt">{{ $categories->count() }}</span></h3><p>Used when you add an expense.</p></div><span class="acc-chev mobile-only"><x-icon name="chevron-down" size="18" /></span></div>
         <div class="chips">
           @foreach ($categories as $c)
             <form method="POST" action="{{ route('settings.categories.destroy', $c) }}" class="chip" data-confirm="Remove category?" data-confirm-text="{{ $c->name }} will be removed from the list. Past expenses keep their category." data-confirm-ok="Remove">
@@ -39,8 +39,8 @@
         </form>
       </div>
 
-      <div class="card">
-        <div class="set-head"><span class="kpi-ic"><x-icon name="lock" size="16" /></span><div><h3>Change password</h3><p>Use at least 8 characters.</p></div></div>
+      <div class="card" data-acc>
+        <div class="set-head"><span class="kpi-ic"><x-icon name="lock" size="16" /></span><div><h3>Change password</h3><p>Use at least 8 characters.</p></div><span class="acc-chev mobile-only"><x-icon name="chevron-down" size="18" /></span></div>
         <form method="POST" action="{{ route('settings.password') }}">
           @csrf @method('PUT')
           <div class="field"><label for="current">Current password</label><input id="current" type="password" name="current" required autocomplete="current-password"></div>
@@ -50,8 +50,8 @@
         </form>
       </div>
 
-      <div class="card" id="export">
-        <div class="set-head"><span class="kpi-ic gold"><x-icon name="download" size="16" /></span><div><h3>Export data</h3><p>Download your sales and expenses for any dates.</p></div></div>
+      <div class="card" id="export" data-acc>
+        <div class="set-head"><span class="kpi-ic gold"><x-icon name="download" size="16" /></span><div><h3>Export data</h3><p>Download your sales and expenses for any dates.</p></div><span class="acc-chev mobile-only"><x-icon name="chevron-down" size="18" /></span></div>
         <form method="GET" action="{{ route('export.form') }}" class="export-form">
           <div class="field"><span class="label">What to export</span>
             <div class="pay-opts">
@@ -74,5 +74,9 @@
       </div>
 
     </div>
+  </div>
+  <div class="card m-account mobile-only">
+    <div class="ma-user"><span class="avatar">{{ mb_strtoupper(mb_substr(auth()->user()->name, 0, 1)) }}</span><div><b>{{ auth()->user()->name }}</b><small>{{ auth()->user()->email }}</small></div></div>
+    <form method="POST" action="{{ route('logout') }}" data-confirm="Log out?" data-confirm-text="You will need your email and password to log in again." data-confirm-ok="Log out" data-confirm-kind="neutral">@csrf<button class="btn btn-danger ma-out" type="submit"><x-icon name="logout" size="17" />Log out</button></form>
   </div>
 @endsection

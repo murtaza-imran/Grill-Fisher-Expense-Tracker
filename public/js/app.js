@@ -148,6 +148,31 @@ document.addEventListener('keydown', e => {
   }
 });
 
+/* ---------- phone app behaviour ---------- */
+const isPhone = () => matchMedia('(max-width: 960px)').matches;
+// settings sections open/close on phones
+$$('[data-acc]').forEach(card => {
+  const head = $('.set-head', card);
+  if (isPhone()) card.classList.add('collapsed');
+  head.addEventListener('click', e => {
+    if (!isPhone() || e.target.closest('a, button, input, select')) return;
+    const opening = card.classList.contains('collapsed');
+    $$('[data-acc]').forEach(c => c.classList.add('collapsed'));
+    if (opening) { card.classList.remove('collapsed'); setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60); }
+  });
+});
+if (location.hash === '#export' && $('#export')) $('#export').classList.remove('collapsed');
+// thin gold loading bar when moving between pages
+const loadbar = $('#loadbar');
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href]');
+  if (!a || !loadbar || a.hasAttribute('data-modal-form') || a.target || e.ctrlKey || e.metaKey || a.hasAttribute('download')) return;
+  const url = new URL(a.href, location.href);
+  if (url.origin !== location.origin || url.pathname.startsWith('/export') || (url.pathname === location.pathname && url.hash)) return;
+  loadbar.classList.add('go');
+});
+window.addEventListener('pageshow', () => loadbar && loadbar.classList.remove('go'));
+
 /* ---------- flash ---------- */
 const flash = $('.flash');
 if (flash) setTimeout(() => { flash.style.transition = 'opacity .5s'; flash.style.opacity = '0'; setTimeout(() => flash.remove(), 600); }, 4000);

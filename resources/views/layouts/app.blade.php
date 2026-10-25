@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ asset('css/app.css') }}?v=26">
+  <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ filemtime(public_path('css/app.css')) }}">
 </head>
 <body class="page-{{ str_replace('.', '-', request()->route()?->getName() ?? 'page') }}">
 @php
@@ -30,6 +30,7 @@
   ];
   $user = auth()->user();
 @endphp
+  <div class="loadbar" id="loadbar"></div>
   <div class="shell">
     <header class="topbar">
       <a href="{{ route('dashboard') }}" class="logo">
@@ -153,7 +154,7 @@
   @if (session('saved'))
     <script type="application/json" id="savedPopup">@json(session('saved'))</script>
   @endif
-  <script src="{{ asset('js/app.js') }}?v=22"></script>
+  <script src="{{ asset('js/app.js') }}?v={{ filemtime(public_path('js/app.js')) }}"></script>
   @stack('scripts')
 </body>
 </html>

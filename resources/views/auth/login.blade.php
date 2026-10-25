@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ asset('css/app.css') }}?v=26">
+  <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ filemtime(public_path('css/app.css')) }}">
 </head>
 <body>
   <div class="login-page">
@@ -41,7 +41,7 @@
       <form method="POST" action="{{ url('/login') }}" class="login-card">
         @csrf
         <div class="logo login-logo">
-          <img src="{{ asset('img/logo.webp') }}" alt="" width="46" height="46">
+          <img src="{{ asset('img/logo.webp') }}" alt="" width="88" height="88">
           <div><b>Grill Fisher &amp; BBQ</b><small>Business dashboard</small></div>
         </div>
         <h1>Welcome back</h1>
@@ -56,6 +56,6 @@
       </form>
     </div>
   </div>
-  <script src="{{ asset('js/app.js') }}?v=22"></script>
+  <script src="{{ asset('js/app.js') }}?v={{ filemtime(public_path('js/app.js')) }}"></script>
 </body>
 </html>
