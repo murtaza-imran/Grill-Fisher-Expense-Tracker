@@ -40,7 +40,7 @@
               </td>
             </tr>
           @empty
-            <tr><td colspan="6"><div class="empty-state"><x-icon name="receipt" size="28" /><b>No sales in this period</b><span>Change the dates or add a new sale.</span></div></td></tr>
+            <tr><td colspan="6"><div class="empty-state"><x-icon name="receipt" size="28" /><b>No sales in this period</b><span>Tap the button to add your first sale.</span><a href="{{ route('sales.create') }}" data-modal-form class="btn"><x-icon name="plus" size="16" />New sale</a></div></td></tr>
           @endforelse
         </tbody>
       </table>

@@ -41,7 +41,7 @@
               </td>
             </tr>
           @empty
-            <tr><td colspan="6"><div class="empty-state"><x-icon name="wallet" size="28" /><b>No expenses in this period</b><span>Change the dates or add a new expense.</span></div></td></tr>
+            <tr><td colspan="6"><div class="empty-state"><x-icon name="wallet" size="28" /><b>No expenses in this period</b><span>Tap the button to add an expense.</span><a href="{{ route('expenses.create') }}" data-modal-form class="btn"><x-icon name="plus" size="16" />Add expense</a></div></td></tr>
           @endforelse
         </tbody>
       </table>
