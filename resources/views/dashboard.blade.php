@@ -51,34 +51,41 @@
 
     <div class="mh-actions">
       <a href="{{ route('sales.create') }}" data-modal-form class="mh-btn sale">
-        <span class="mh-ic"><x-icon name="plus" size="26" /></span>
-        <span><b>New sale</b><small>BBQ, Fish or Other</small></span>
+        <span class="mh-ic"><x-icon name="plus" size="22" /></span>
+        <span class="mh-txt"><b>New sale</b><small>Add a sale</small></span>
       </a>
       <a href="{{ route('expenses.create') }}" data-modal-form class="mh-btn exp">
-        <span class="mh-ic"><x-icon name="plus" size="26" /></span>
-        <span><b>Add expense</b><small>Money you spent</small></span>
+        <span class="mh-ic"><x-icon name="plus" size="22" /></span>
+        <span class="mh-txt"><b>Expense</b><small>Money spent</small></span>
       </a>
     </div>
 
-    <div class="mh-today">
-      <div class="mh-head"><span>Today</span><a href="{{ route('reports', ['q' => 'today']) }}">Details<x-icon name="chevron-right" size="14" /></a></div>
-      <div class="mh-big">
-        <small>Sales</small>
-        <strong>{{ $rs($salesToday) }}</strong>
-        <div class="foot">{!! $pill($dSales, 'vs yesterday') !!}</div>
+    <div class="mh-card mh-today">
+      <div class="mh-head">
+        <span class="mh-title"><x-icon name="calendar" size="16" />Today</span>
+        <a href="{{ route('reports', ['q' => 'today']) }}">Details<x-icon name="chevron-right" size="14" /></a>
       </div>
-      <div class="mh-row">
+      <small class="mh-label">Sales</small>
+      <strong class="mh-amount">{{ $rs($salesToday) }}</strong>
+      <div class="mh-delta">{!! $pill($dSales, 'vs yesterday') !!}</div>
+      <div class="mh-stats">
         <div><small>Expenses</small><b>{{ $rs($expToday) }}</b></div>
         <div><small>Profit</small><b class="{{ $profitToday < 0 ? 'neg' : 'pos' }}">{{ $profitToday < 0 ? '−' : '' }}{{ $rs(abs($profitToday)) }}</b></div>
         <div><small>Orders</small><b>{{ $salesTodayN }}</b></div>
       </div>
     </div>
 
-    <a class="mh-month" href="{{ route('reports', ['q' => 'month']) }}">
-      <div><small>This month · sales</small><b>{{ $rs($monthSales) }}</b></div>
-      <div><small>Expenses</small><b>{{ $rs($monthExp) }}</b></div>
-      <div><small>Profit</small><b class="{{ $profitMonth < 0 ? 'neg' : 'pos' }}">{{ $profitMonth < 0 ? '−' : '' }}{{ $rs(abs($profitMonth)) }}</b></div>
-    </a>
+    <div class="mh-card mh-month">
+      <div class="mh-head">
+        <span class="mh-title"><x-icon name="chart" size="16" />This month</span>
+        <a href="{{ route('reports', ['q' => 'month']) }}">Report<x-icon name="chevron-right" size="14" /></a>
+      </div>
+      <div class="mh-stats">
+        <div><small>Sales</small><b>{{ $rs($monthSales) }}</b></div>
+        <div><small>Expenses</small><b>{{ $rs($monthExp) }}</b></div>
+        <div><small>Profit</small><b class="{{ $profitMonth < 0 ? 'neg' : 'pos' }}">{{ $profitMonth < 0 ? '−' : '' }}{{ $rs(abs($profitMonth)) }}</b></div>
+      </div>
+    </div>
   </section>
   <div class="dash">
     <div class="dash-main">
