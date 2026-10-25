@@ -871,3 +871,12 @@ body { -webkit-tap-highlight-color: transparent; }
   .tbl.cards .c-sub { order: 4; } .tbl.cards .c-pill { order: 5; } .tbl.cards .act { order: 6; }
   .tbl.cards .c-title { flex: 1 1 0; }
 }
+
+
+/* ---------- simple sale form: BBQ / Fish / Other + amount ---------- */
+.cat-opts label { min-width: 90px; }
+.cat-opts span { flex-direction: column; gap: 4px; height: 76px; border-radius: 18px; font-size: 14px; }
+.cat-opts span .ic { color: var(--muted); }
+.cat-opts input:checked + span .ic { color: var(--gold-2); }
+.amount-input { height: 60px !important; font-size: 26px !important; font-weight: 700; letter-spacing: -.5px; }
+.sale-form .f-items { margin-top: 18px; }

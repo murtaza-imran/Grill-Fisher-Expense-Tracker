@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
-use App\Models\MenuItem;
 use App\Models\Sale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -15,7 +14,6 @@ class SettingsController extends Controller
     {
         return view('settings.index', [
             'categories' => ExpenseCategory::orderBy('name')->get(),
-            'items' => MenuItem::orderBy('sort')->orderBy('name')->get(),
         ]);
     }
 
@@ -31,24 +29,6 @@ class SettingsController extends Controller
         return back()->with('ok', 'Category removed');
     }
 
-    public function addItem(Request $request)
-    {
-        $data = $request->validate(['name' => 'required|string|max:120', 'price' => 'required|integer|min:0']);
-        MenuItem::create($data + ['sort' => (int) MenuItem::max('sort') + 1]);
-        return back()->with('ok', 'Menu item added');
-    }
-
-    public function updateItem(Request $request, MenuItem $item)
-    {
-        $item->update($request->validate(['name' => 'required|string|max:120', 'price' => 'required|integer|min:0']));
-        return back()->with('ok', 'Menu item updated');
-    }
-
-    public function deleteItem(MenuItem $item)
-    {
-        $item->delete();
-        return back()->with('ok', 'Menu item removed');
-    }
 
     public function password(Request $request)
     {
@@ -63,7 +43,6 @@ class SettingsController extends Controller
             'exported_at' => now()->toIso8601String(),
             'sales' => Sale::with('items')->get(),
             'expenses' => Expense::all(),
-            'menu_items' => MenuItem::all(),
             'expense_categories' => ExpenseCategory::all(),
         ];
         return response()->streamDownload(

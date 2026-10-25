@@ -83,9 +83,9 @@ class ExportController extends Controller
         $sales = $query->orderByDesc('date')->orderByDesc('id')->get();
         return new Exporter(
             'Sales', $this->period($from, $to) . ($q !== '' ? " · search: \"$q\"" : ''),
-            ['Date', 'Items', 'Customer', 'Payment', 'Note', 'Amount (Rs.)'],
-            $sales->map(fn ($s) => [$s->date->format('d M Y'), $s->summary(), $s->customer ?? '', ucfirst($s->payment), $s->note ?? '', (int) $s->total])->all(),
-            [5],
+            ['Date', 'Category', 'Payment', 'Amount (Rs.)'],
+            $sales->map(fn ($s) => [$s->date->format('d M Y'), $s->summary(), ucfirst($s->payment), (int) $s->total])->all(),
+            [3],
             [
                 'Total sales' => $this->rs((int) $sales->sum('total')), 'Orders' => (string) $sales->count(),
                 'Cash' => $this->rs((int) $sales->where('payment', 'cash')->sum('total')), 'Online' => $this->rs((int) $sales->where('payment', 'online')->sum('total')),

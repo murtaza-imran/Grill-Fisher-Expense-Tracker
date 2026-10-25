@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\MenuItem;
 use App\Models\Sale;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -41,7 +40,6 @@ class SaleController extends Controller
         return view(request()->ajax() ? 'sales._form' : 'sales.form', [
             'modal' => request()->ajax(),
             'sale' => $sale,
-            'menu' => MenuItem::orderBy('sort')->orderBy('name')->get(),
         ]);
     }
 
@@ -85,25 +83,19 @@ class SaleController extends Controller
     private function save(Sale $sale, Request $request): Sale
     {
         $data = $request->validate([
-            'date' => 'required|date',
-            'customer' => 'nullable|string|max:120',
+            'category' => 'required|in:' . implode(',', Sale::CATEGORIES),
+            'amount' => 'required|integer|min:1|max:100000000',
             'payment' => 'required|in:cash,online',
-            'note' => 'nullable|string|max:255',
-            'items' => 'required|array|min:1',
-            'items.*.name' => 'required|string|max:120',
-            'items.*.qty' => 'required|integer|min:1|max:10000',
-            'items.*.price' => 'required|integer|min:0|max:10000000',
+            'date' => 'required|date',
         ], [
-            'items.required' => 'Add at least one item.',
+            'category.required' => 'Choose BBQ, Fish or Other.',
+            'amount.required' => 'Enter the sale amount.',
+            'amount.min' => 'Enter the sale amount.',
         ]);
 
-        $items = collect($data['items']);
-        $data['total'] = $items->sum(fn ($i) => $i['qty'] * $i['price']);
-        unset($data['items']);
-
-        $sale->fill($data)->save();
+        $sale->fill(['date' => $data['date'], 'payment' => $data['payment'], 'total' => $data['amount'], 'customer' => null, 'note' => null])->save();
         $sale->items()->delete();
-        $sale->items()->createMany($items->map(fn ($i) => ['name' => $i['name'], 'qty' => $i['qty'], 'price' => $i['price']])->all());
+        $sale->items()->create(['name' => $data['category'], 'qty' => 1, 'price' => $data['amount']]);
         return $sale;
     }
 }

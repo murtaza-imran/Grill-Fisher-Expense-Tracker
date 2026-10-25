@@ -54,7 +54,7 @@ class DashboardController extends Controller
             ->map(fn ($r) => ['k' => $r->k, 'v' => (int) $r->v])->values();
 
         $best = SaleItem::whereHas('sale', fn ($q) => $q->whereBetween('date', $ymd($monthStart, $today)))
-            ->selectRaw('name, SUM(qty) q, SUM(qty * price) v')->groupBy('name')->orderByDesc('q')->limit(5)->get();
+            ->selectRaw('name, COUNT(*) q, SUM(qty * price) v')->groupBy('name')->orderByDesc('v')->limit(5)->get();
 
         // busy hours: orders in the last 30 days by weekday × time slot (time the sale was entered)
         $slots = ['Before 5 PM', '5 – 8 PM', '8 – 11 PM', '11 PM – late'];

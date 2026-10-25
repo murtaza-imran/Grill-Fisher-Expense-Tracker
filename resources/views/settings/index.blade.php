@@ -4,26 +4,6 @@
 
 @section('content')
   <div class="grid2 top">
-    <div class="card" data-acc>
-      <div class="set-head"><span class="kpi-ic gold"><x-icon name="utensils" size="16" /></span><div><h3>Menu items <span class="cnt">{{ $items->count() }}</span></h3><p>Prices used when you tap an item on the sale screen.</p></div><span class="acc-chev mobile-only"><x-icon name="chevron-down" size="18" /></span></div>
-      @foreach ($items as $it)
-        <form method="POST" action="{{ route('settings.items.update', $it) }}" class="item-edit">
-          @csrf @method('PUT')
-          <input name="name" value="{{ $it->name }}" aria-label="Item name" required>
-          <input name="price" type="number" min="0" value="{{ $it->price }}" aria-label="Price" required>
-          <button class="btn btn-ghost btn-sm" type="submit">Save</button>
-          <button class="btn btn-ghost btn-sm del" type="submit" form="delItem{{ $it->id }}" aria-label="Remove {{ $it->name }}" title="Remove"><x-icon name="trash" size="15" /></button>
-        </form>
-        <form id="delItem{{ $it->id }}" method="POST" action="{{ route('settings.items.destroy', $it) }}" data-confirm="Remove menu item?" data-confirm-text="{{ $it->name }} will be removed from the sale screen. Past sales are not affected." data-confirm-ok="Remove">@csrf @method('DELETE')</form>
-      @endforeach
-      <form method="POST" action="{{ route('settings.items.store') }}" class="row-btns">
-        @csrf
-        <input name="name" placeholder="New item name" aria-label="New item name" required>
-        <input name="price" type="number" min="0" placeholder="Price" aria-label="New item price" required style="flex:0 0 110px;min-width:0">
-        <button class="btn btn-sm" type="submit"><x-icon name="plus" size="15" />Add item</button>
-      </form>
-    </div>
-
     <div>
       <div class="card" data-acc>
         <div class="set-head"><span class="kpi-ic blue"><x-icon name="tag" size="16" /></span><div><h3>Expense categories <span class="cnt">{{ $categories->count() }}</span></h3><p>Used when you add an expense.</p></div><span class="acc-chev mobile-only"><x-icon name="chevron-down" size="18" /></span></div>
@@ -49,7 +29,9 @@
           <button class="btn btn-sm" type="submit">Update password</button>
         </form>
       </div>
+    </div>
 
+    <div>
       <div class="card" id="export" data-acc>
         <div class="set-head"><span class="kpi-ic gold"><x-icon name="download" size="16" /></span><div><h3>Export data</h3><p>Download your sales and expenses for any dates.</p></div><span class="acc-chev mobile-only"><x-icon name="chevron-down" size="18" /></span></div>
         <form method="GET" action="{{ route('export.form') }}" class="export-form">
@@ -72,9 +54,9 @@
           </div>
         </form>
       </div>
-
     </div>
   </div>
+
   <div class="card m-account mobile-only">
     <div class="ma-user"><span class="avatar">{{ mb_strtoupper(mb_substr(auth()->user()->name, 0, 1)) }}</span><div><b>{{ auth()->user()->name }}</b><small>{{ auth()->user()->email }}</small></div></div>
     <form method="POST" action="{{ route('logout') }}" data-confirm="Log out?" data-confirm-text="You will need your email and password to log in again." data-confirm-ok="Log out" data-confirm-kind="neutral">@csrf<button class="btn btn-danger ma-out" type="submit"><x-icon name="logout" size="17" />Log out</button></form>

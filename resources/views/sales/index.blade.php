@@ -9,7 +9,7 @@
 
 @section('toolbar')
   <form class="toolbar" method="GET">
-    <label class="search"><x-icon name="search" size="16" /><input type="search" name="q" value="{{ $q }}" placeholder="Search item or customer" aria-label="Search sales"></label>
+    <label class="search"><x-icon name="search" size="16" /><input type="search" name="q" value="{{ $q }}" placeholder="Search BBQ, Fish, Other" aria-label="Search sales"></label>
     @include('partials.range', ['route' => 'sales.index', 'keep' => ['q' => $q]])
   </form>
 @endsection
@@ -25,18 +25,17 @@
   <div class="card card-flush">
     <div class="table-wrap">
       <table class="tbl cards">
-        <thead><tr><th>Date</th><th>Items</th><th>Customer</th><th>Payment</th><th class="num">Amount</th><th></th></tr></thead>
+        <thead><tr><th>Date</th><th>Category</th><th>Payment</th><th class="num">Amount</th><th></th></tr></thead>
         <tbody>
           @php $lastDay = null; $pageRows = $sales->getCollection(); @endphp
           @forelse ($sales as $s)
             @if ($s->date->toDateString() !== $lastDay)
               @php $lastDay = $s->date->toDateString(); $d = $s->date; $dayRows = $pageRows->filter(fn ($x) => $x->date->toDateString() === $lastDay); @endphp
-              <tr class="grp"><td colspan="6"><span>{{ $d->isToday() ? 'Today' : ($d->isYesterday() ? 'Yesterday' : $d->format('D, j M')) }}</span><b>{{ $rs($dayRows->sum('total')) }} · {{ $dayRows->count() }} {{ Str::plural('order', $dayRows->count()) }}</b></td></tr>
+              <tr class="grp"><td colspan="5"><span>{{ $d->isToday() ? 'Today' : ($d->isYesterday() ? 'Yesterday' : $d->format('D, j M')) }}</span><b>{{ $rs($dayRows->sum('total')) }} · {{ $dayRows->count() }} {{ Str::plural('order', $dayRows->count()) }}</b></td></tr>
             @endif
             <tr>
               <td class="date c-date">{{ $s->date->format('j M Y') }}</td>
               <td class="c-title">{{ $s->summary() }}</td>
-              <td class="c-sub {{ $s->customer ? '' : 'sub' }}">{{ $s->customer ?: '—' }}</td>
               <td class="c-pill"><span class="pill {{ $s->payment }}">{{ ucfirst($s->payment) }}</span></td>
               <td class="num c-amt">{{ $rs($s->total) }}</td>
               <td class="act">
@@ -45,7 +44,7 @@
               </td>
             </tr>
           @empty
-            <tr><td colspan="6"><div class="empty-state"><x-icon name="receipt" size="28" /><b>No sales in this period</b><span>Tap the button to add your first sale.</span><a href="{{ route('sales.create') }}" data-modal-form class="btn"><x-icon name="plus" size="16" />New sale</a></div></td></tr>
+            <tr><td colspan="5"><div class="empty-state"><x-icon name="receipt" size="28" /><b>No sales in this period</b><span>Tap the button to add your first sale.</span><a href="{{ route('sales.create') }}" data-modal-form class="btn"><x-icon name="plus" size="16" />New sale</a></div></td></tr>
           @endforelse
         </tbody>
       </table>

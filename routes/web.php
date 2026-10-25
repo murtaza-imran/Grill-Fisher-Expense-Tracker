@@ -30,9 +30,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
     Route::post('/settings/categories', [SettingsController::class, 'addCategory'])->name('settings.categories.store');
     Route::delete('/settings/categories/{category}', [SettingsController::class, 'deleteCategory'])->name('settings.categories.destroy');
-    Route::post('/settings/items', [SettingsController::class, 'addItem'])->name('settings.items.store');
-    Route::put('/settings/items/{item}', [SettingsController::class, 'updateItem'])->name('settings.items.update');
-    Route::delete('/settings/items/{item}', [SettingsController::class, 'deleteItem'])->name('settings.items.destroy');
     Route::put('/settings/password', [SettingsController::class, 'password'])->name('settings.password');
     Route::get('/settings/backup', [SettingsController::class, 'backup'])->name('settings.backup');
 });

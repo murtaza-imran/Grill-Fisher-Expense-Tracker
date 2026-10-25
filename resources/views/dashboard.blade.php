@@ -18,7 +18,7 @@
   $heatMax = max(1, max(array_map('max', $heat)));
   $level = fn ($n) => $n === 0 ? '' : 'l' . min(4, (int) ceil($n / $heatMax * 4));
   $dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  $bestMax = max(1, (int) ($best->max('q') ?? 1));
+  $bestMax = max(1, (int) ($best->max('v') ?? 1));
   $start = \Carbon\Carbon::parse($daily[0]['d']);
 @endphp
 
@@ -52,7 +52,7 @@
     <div class="mh-actions">
       <a href="{{ route('sales.create') }}" data-modal-form class="mh-btn sale">
         <span class="mh-ic"><x-icon name="plus" size="26" /></span>
-        <span><b>New sale</b><small>Add a customer order</small></span>
+        <span><b>New sale</b><small>BBQ, Fish or Other</small></span>
       </a>
       <a href="{{ route('expenses.create') }}" data-modal-form class="mh-btn exp">
         <span class="mh-ic"><x-icon name="plus" size="26" /></span>
@@ -118,7 +118,7 @@
               <a href="{{ route('expenses.create') }}" data-modal-form class="chipbtn"><span class="ci"><x-icon name="wallet" size="13" /></span>Add expense</a>
               <a href="{{ route('reports', ['q' => 'today']) }}" class="chipbtn"><span class="ci"><x-icon name="chart" size="13" /></span>Today's report</a>
               <a href="{{ route('reports', ['q' => 'month']) }}" class="chipbtn"><span class="ci"><x-icon name="calendar" size="13" /></span>This month</a>
-              <a href="{{ route('settings') }}" class="chipbtn"><span class="ci"><x-icon name="utensils" size="13" /></span>Menu prices</a>
+              <a href="{{ route('settings') }}" class="chipbtn"><span class="ci"><x-icon name="settings" size="13" /></span>Settings</a>
             </div>
             <form class="askbar" method="GET" action="{{ route('sales.index') }}" role="search">
               <input type="search" name="q" placeholder="Search a sale or item…" aria-label="Search sales">
@@ -186,17 +186,17 @@
       <div class="duo duo-fill">
         <section class="panel p-best">
           <div class="card-head">
-            <div><span class="eyebrow">This month</span><div class="title">Best sellers</div></div>
+            <div><span class="eyebrow">This month</span><div class="title">Sales by category</div></div>
           </div>
           <div class="best">
             @forelse ($best as $i => $b)
               <div class="best-row">
                 <span class="rk">{{ $i + 1 }}</span>
-                <div><b>{{ $b->name }}</b><div class="cap"><i style="width: {{ round($b->q / $bestMax * 100) }}%"></i></div></div>
-                <span class="q">{{ $b->q }} sold<small>{{ $rs($b->v) }}</small></span>
+                <div><b>{{ $b->name }}</b><div class="cap"><i style="width: {{ round($b->v / $bestMax * 100) }}%"></i></div></div>
+                <span class="q">{{ $rs($b->v) }}<small>{{ $b->q }} {{ Str::plural('sale', $b->q) }}</small></span>
               </div>
             @empty
-              <div class="empty-state"><x-icon name="utensils" size="28" /><b>No sales yet</b><span>Top menu items will appear here.</span></div>
+              <div class="empty-state"><x-icon name="utensils" size="28" /><b>No sales yet</b><span>BBQ, Fish and Other totals will appear here.</span></div>
             @endforelse
           </div>
         </section>
@@ -218,7 +218,7 @@
             <div class="mini-stats">
               <div><span class="eyebrow">Orders</span><strong>{{ number_format($monthOrders) }}</strong></div>
               <div><span class="eyebrow">Avg order</span><strong>{{ $rs($monthOrders ? $mixTotal / $monthOrders : 0) }}</strong></div>
-              <div><span class="eyebrow">Items sold</span><strong>{{ number_format($itemsSold) }}</strong></div>
+              <div><span class="eyebrow">Top category</span><strong>{{ $best->first()?->name ?? '—' }}</strong></div>
             </div>
           @else
             <div class="empty-state"><x-icon name="banknote" size="28" /><b>No sales this month</b><span>Cash and online split appears here.</span></div>
