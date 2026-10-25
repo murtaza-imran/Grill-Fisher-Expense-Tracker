@@ -103,6 +103,25 @@ document.addEventListener('input', e => {
   if (msg) msg.remove();
 });
 
+/* ---------- phone: "+" choice sheet ---------- */
+const sheet = $('#addSheet');
+function closeSheet() { if (sheet && !sheet.hidden) { sheet.classList.remove('show'); setTimeout(() => { sheet.hidden = true; }, 200); } }
+document.addEventListener('click', e => {
+  if (e.target.closest('[data-open-sheet]')) { sheet.hidden = false; requestAnimationFrame(() => sheet.classList.add('show')); return; }
+  if (sheet && !sheet.hidden && (e.target === sheet || e.target.closest('[data-close-sheet]') || e.target.closest('.sheet-opt'))) closeSheet();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
+
+/* ---------- phone: "Custom" date range toggle ---------- */
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-toggle-dates]');
+  if (!b) return;
+  const box = $('.date-range', b.closest('form'));
+  box.classList.toggle('open');
+  $$('[data-toggle-dates]', b.closest('form')).forEach(x => x.classList.toggle('on', box.classList.contains('open')));
+  if (box.classList.contains('open')) { const d = $('input[type=date]', box); if (d) d.focus(); }
+});
+
 /* ---------- dropdown menus (export) ---------- */
 function closeMenus(except) {
   $$('.dd-menu').forEach(m => { if (m !== except) { m.hidden = true; m.previousElementSibling.setAttribute('aria-expanded', 'false'); } });
@@ -268,12 +287,22 @@ function initSaleForm(form) {
   function draw() {
     body.innerHTML = rows.map((r, k) => `<tr data-k="${k}">
       <td><input name="items[${k}][name]" value="${esc(r.name)}" aria-label="Item name" required></td>
-      <td><input name="items[${k}][qty]" type="number" min="1" value="${r.qty}" aria-label="Quantity" required></td>
-      <td><input name="items[${k}][price]" type="number" min="0" value="${r.price}" aria-label="Price" required></td>
+      <td><div class="stepper"><button type="button" class="st" data-step="-1" aria-label="One less">−</button><input name="items[${k}][qty]" type="number" min="1" inputmode="numeric" value="${r.qty}" aria-label="Quantity" required><button type="button" class="st" data-step="1" aria-label="One more">+</button></div></td>
+      <td><input name="items[${k}][price]" type="number" min="0" inputmode="numeric" value="${r.price}" aria-label="Price" required></td>
       <td class="line">${rs(r.qty * r.price)}</td>
       <td class="act"><button type="button" class="del" aria-label="Remove item" title="Remove">${trashSvg}</button></td></tr>`).join('');
     $('.js-norows', form).hidden = rows.length > 0;
-    $('.js-grand', form).textContent = rs(total());
+    totals();
+    // badge on each menu button with how many are in the order
+    $$('.js-quick button', form).forEach(b => {
+      const q = rows.filter(r => r.name === b.dataset.name && r.price === +b.dataset.price).reduce((t, r) => t + r.qty, 0);
+      if (q) b.dataset.qty = q; else delete b.dataset.qty;
+    });
+  }
+  function totals() {
+    $$('.js-grand', form).forEach(el => { el.textContent = rs(total()); });
+    const n = rows.reduce((t, r) => t + r.qty, 0);
+    $$('.js-count', form).forEach(el => { el.textContent = n ? n + (n === 1 ? ' item' : ' items') : 'No items'; });
   }
   function read() {
     $$('tr[data-k]', body).forEach(tr => {
@@ -295,9 +324,13 @@ function initSaleForm(form) {
   body.addEventListener('input', () => {
     read();
     $$('tr[data-k]', body).forEach(tr => { const r = rows[+tr.dataset.k]; $('.line', tr).textContent = rs(r.qty * r.price); });
-    $('.js-grand', form).textContent = rs(total());
+    totals();
   });
-  body.addEventListener('click', e => { if (e.target.closest('.del')) { read(); rows.splice(+e.target.closest('tr').dataset.k, 1); draw(); } });
+  body.addEventListener('click', e => {
+    const st = e.target.closest('.st');
+    if (st) { read(); const r = rows[+st.closest('tr').dataset.k]; r.qty = Math.max(1, r.qty + +st.dataset.step); draw(); return; }
+    if (e.target.closest('.del')) { read(); rows.splice(+e.target.closest('tr').dataset.k, 1); draw(); }
+  });
   form.addEventListener('submit', e => {
     read();
     if (!rows.length) {

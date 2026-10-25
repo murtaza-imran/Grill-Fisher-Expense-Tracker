@@ -7,10 +7,16 @@
   <title>Log in | Grill Fisher &amp; BBQ</title>
   <meta name="theme-color" content="#0b0b0c">
   <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}">
+  <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+  <link rel="apple-touch-icon" href="{{ asset('img/icon-180.png') }}">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Grill Fisher">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ asset('css/app.css') }}?v=21">
+  <link rel="stylesheet" href="{{ asset('css/app.css') }}?v=24">
 </head>
 <body>
   <div class="login-page">
@@ -50,6 +56,6 @@
       </form>
     </div>
   </div>
-  <script src="{{ asset('js/app.js') }}?v=14"></script>
+  <script src="{{ asset('js/app.js') }}?v=22"></script>
 </body>
 </html>

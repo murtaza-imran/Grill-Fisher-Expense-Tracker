@@ -8,10 +8,16 @@
   <title>@yield('title', 'Dashboard') | Grill Fisher &amp; BBQ</title>
   <meta name="theme-color" content="#0a0806">
   <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') }}">
+  <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+  <link rel="apple-touch-icon" href="{{ asset('img/icon-180.png') }}">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Grill Fisher">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ asset('css/app.css') }}?v=21">
+  <link rel="stylesheet" href="{{ asset('css/app.css') }}?v=24">
 </head>
 <body>
 @php
@@ -30,6 +36,7 @@
         <img src="{{ asset('img/logo.webp') }}" alt="" width="46" height="46">
         <div><b>Grill Fisher &amp; BBQ</b><small>Business dashboard</small></div>
       </a>
+      <div class="appbar-title mobile-only">@yield('heading', 'Dashboard')</div>
       <nav class="pillnav" aria-label="Sections">
         @foreach ($nav as [$route, $label, $pattern])
           <a href="{{ route($route) }}" class="{{ request()->routeIs($pattern) ? 'active' : '' }}">{{ $label }}</a>
@@ -100,15 +107,28 @@
     <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}"><x-icon name="dashboard" size="20" />Home</a>
     <a href="{{ route('sales.index') }}" class="{{ request()->routeIs('sales.*') ? 'active' : '' }}"><x-icon name="receipt" size="20" />Sales</a>
     @if (request()->routeIs('expenses.*'))
-      <a href="{{ route('expenses.create') }}" data-modal-form class="bnav-add" aria-label="Add expense"><x-icon name="plus" size="22" /></a>
+      <a href="{{ route('expenses.create') }}" data-modal-form class="bnav-add" aria-label="Add expense"><x-icon name="plus" size="24" /></a>
+    @elseif (request()->routeIs('sales.*'))
+      <a href="{{ route('sales.create') }}" data-modal-form class="bnav-add" aria-label="New sale"><x-icon name="plus" size="24" /></a>
     @else
-      <a href="{{ route('sales.create') }}" data-modal-form class="bnav-add" aria-label="New sale"><x-icon name="plus" size="22" /></a>
+      <button type="button" class="bnav-add" data-open-sheet aria-label="Add sale or expense"><x-icon name="plus" size="24" /></button>
     @endif
     <a href="{{ route('expenses.index') }}" class="{{ request()->routeIs('expenses.*') ? 'active' : '' }}"><x-icon name="wallet" size="20" />Expenses</a>
     <a href="{{ route('reports') }}" class="{{ request()->routeIs('reports*') ? 'active' : '' }}"><x-icon name="chart" size="20" />Reports</a>
   </nav>
 
   <div class="tip" id="tip" role="tooltip" hidden></div>
+
+  {{-- phone "+" choice: what to add --}}
+  <div class="sheet" id="addSheet" hidden>
+    <div class="sheet-card" role="dialog" aria-modal="true" aria-label="Add new">
+      <span class="sheet-grab"></span>
+      <h3>What do you want to add?</h3>
+      <a href="{{ route('sales.create') }}" data-modal-form class="sheet-opt sale"><span class="so-ic"><x-icon name="receipt" size="22" /></span><span><b>New sale</b><small>Customer order or takeaway</small></span><x-icon name="chevron-right" size="18" /></a>
+      <a href="{{ route('expenses.create') }}" data-modal-form class="sheet-opt exp"><span class="so-ic"><x-icon name="wallet" size="22" /></span><span><b>Add expense</b><small>Fish, gas, salary, bills…</small></span><x-icon name="chevron-right" size="18" /></a>
+      <button type="button" class="btn btn-ghost sheet-cancel" data-close-sheet>Cancel</button>
+    </div>
+  </div>
 
   <div class="form-modal" id="formModal" hidden>
     <div class="form-modal-card" role="dialog" aria-modal="true" aria-label="Form">
@@ -133,7 +153,7 @@
   @if (session('saved'))
     <script type="application/json" id="savedPopup">@json(session('saved'))</script>
   @endif
-  <script src="{{ asset('js/app.js') }}?v=14"></script>
+  <script src="{{ asset('js/app.js') }}?v=22"></script>
   @stack('scripts')
 </body>
 </html>

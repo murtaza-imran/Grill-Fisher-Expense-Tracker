@@ -10,9 +10,7 @@
 @section('toolbar')
   <form class="toolbar" method="GET">
     <label class="search"><x-icon name="search" size="16" /><input type="search" name="q" value="{{ $q }}" placeholder="Search item or customer" aria-label="Search sales"></label>
-    <input type="date" name="from" value="{{ $from }}" aria-label="From date"><span>to</span>
-    <input type="date" name="to" value="{{ $to }}" aria-label="To date">
-    <button class="btn btn-ghost btn-sm"><x-icon name="filter" size="15" />Filter</button>
+    @include('partials.range', ['route' => 'sales.index', 'keep' => ['q' => $q]])
   </form>
 @endsection
 
@@ -26,16 +24,16 @@
   </div>
   <div class="card card-flush">
     <div class="table-wrap">
-      <table class="tbl">
+      <table class="tbl cards">
         <thead><tr><th>Date</th><th>Items</th><th>Customer</th><th>Payment</th><th class="num">Amount</th><th></th></tr></thead>
         <tbody>
           @forelse ($sales as $s)
             <tr>
-              <td class="date">{{ $s->date->format('j M Y') }}</td>
-              <td>{{ $s->summary() }}</td>
-              <td class="{{ $s->customer ? '' : 'sub' }}">{{ $s->customer ?: '—' }}</td>
-              <td><span class="pill {{ $s->payment }}">{{ ucfirst($s->payment) }}</span></td>
-              <td class="num">{{ $rs($s->total) }}</td>
+              <td class="date c-date">{{ $s->date->format('j M Y') }}</td>
+              <td class="c-title">{{ $s->summary() }}</td>
+              <td class="c-sub {{ $s->customer ? '' : 'sub' }}">{{ $s->customer ?: '—' }}</td>
+              <td class="c-pill"><span class="pill {{ $s->payment }}">{{ ucfirst($s->payment) }}</span></td>
+              <td class="num c-amt">{{ $rs($s->total) }}</td>
               <td class="act">
                 <a href="{{ route('sales.edit', $s) }}" data-modal-form aria-label="Edit sale" title="Edit"><x-icon name="pencil" size="15" /></a>
                 <form method="POST" action="{{ route('sales.destroy', $s) }}" class="inline" data-confirm="Delete this sale?" data-confirm-text="This sale of {{ $rs($s->total) }} will be removed permanently. This cannot be undone." data-confirm-ok="Delete sale">@csrf @method('DELETE')<button type="submit" class="del" aria-label="Delete sale" title="Delete"><x-icon name="trash" size="15" /></button></form>

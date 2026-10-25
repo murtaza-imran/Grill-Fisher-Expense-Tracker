@@ -17,10 +17,13 @@
       @foreach (['today' => 'Today', 'week' => '7 days', 'month' => 'This month', 'last' => 'Last month'] as $k => $v)
         <a href="{{ route('reports', ['q' => $k]) }}" class="{{ $q === $k ? 'on' : '' }}">{{ $v }}</a>
       @endforeach
+      <button type="button" class="mobile-only {{ $q === '' ? 'on' : '' }}" data-toggle-dates>Custom</button>
     </div>
-    <input type="date" name="from" value="{{ $from }}" aria-label="From date"><span>to</span>
-    <input type="date" name="to" value="{{ $to }}" aria-label="To date">
-    <button class="btn btn-ghost btn-sm">Apply</button>
+    <div class="date-range {{ $q === '' ? 'open' : '' }}">
+      <input type="date" name="from" value="{{ $from }}" aria-label="From date"><span>to</span>
+      <input type="date" name="to" value="{{ $to }}" aria-label="To date">
+      <button class="btn btn-ghost btn-sm">Apply</button>
+    </div>
   </form>
 @endsection
 
@@ -43,17 +46,17 @@
   <div class="card card-flush">
     <div class="card-head"><h3>All entries</h3><small>{{ \Carbon\Carbon::parse($from)->format('j M Y') }} – {{ \Carbon\Carbon::parse($to)->format('j M Y') }}</small></div>
     <div class="table-wrap">
-      <table class="tbl">
+      <table class="tbl cards">
         <thead><tr><th>Date</th><th>Type</th><th>Detail</th><th>Customer / paid to</th><th>Payment / status</th><th class="num">Amount</th><th></th></tr></thead>
         <tbody>
           @forelse ($rows as $r)
             <tr>
-              <td class="date">{{ \Carbon\Carbon::parse($r['date'])->format('j M Y') }}</td>
-              <td>{{ $r['type'] }}</td>
-              <td>{{ $r['detail'] }}</td>
-              <td class="{{ $r['party'] ? '' : 'sub' }}">{{ $r['party'] ?: '—' }}</td>
-              <td><span class="pill {{ strtolower($r['pay']) }}">{{ $r['pay'] }}</span></td>
-              <td class="num" style="color:{{ $r['amount'] < 0 ? 'var(--bad)' : 'var(--good)' }}">{{ $r['amount'] < 0 ? '−' : '+' }}{{ $rs(abs($r['amount'])) }}</td>
+              <td class="date c-date">{{ \Carbon\Carbon::parse($r['date'])->format('j M Y') }}</td>
+              <td class="c-type">{{ $r['type'] }}</td>
+              <td class="c-title">{{ $r['detail'] }}</td>
+              <td class="c-sub {{ $r['party'] ? '' : 'sub' }}">{{ $r['party'] ?: '—' }}</td>
+              <td class="c-pill"><span class="pill {{ strtolower($r['pay']) }}">{{ $r['pay'] }}</span></td>
+              <td class="num c-amt" style="color:{{ $r['amount'] < 0 ? 'var(--bad)' : 'var(--good)' }}">{{ $r['amount'] < 0 ? '−' : '+' }}{{ $rs(abs($r['amount'])) }}</td>
               <td class="act">
                 <a href="{{ $r['edit'] }}" data-modal-form aria-label="Edit {{ strtolower($r['type']) }}" title="Edit"><x-icon name="pencil" size="15" /></a>
                 <form method="POST" action="{{ $r['del'] }}" class="inline" data-confirm="Delete this {{ strtolower($r['type']) }}?" data-confirm-text="{{ $r['detail'] }} ({{ $rs(abs($r['amount'])) }}) will be removed permanently. This cannot be undone." data-confirm-ok="Delete {{ strtolower($r['type']) }}">@csrf @method('DELETE')<button type="submit" class="del" aria-label="Delete {{ strtolower($r['type']) }}" title="Delete"><x-icon name="trash" size="15" /></button></form>

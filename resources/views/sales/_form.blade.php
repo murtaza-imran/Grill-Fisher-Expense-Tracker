@@ -16,12 +16,12 @@
     </div>
   @endif
 
-  <div class="form-grid">
+  <div class="form-grid f-meta">
     <div class="field"><label for="{{ $p }}date">Date</label><input type="date" id="{{ $p }}date" name="date" value="{{ old('date', $sale->date?->toDateString()) }}" required></div>
     <div class="field"><label for="{{ $p }}customer">Customer <span class="opt">(optional)</span></label><input id="{{ $p }}customer" name="customer" value="{{ old('customer', $sale->customer) }}" placeholder="Customer name"></div>
   </div>
 
-  <div class="section-gap">
+  <div class="section-gap f-menu">
     <span class="label">Add from menu</span>
     <div class="quick js-quick">
       @foreach ($menu as $m)
@@ -30,7 +30,7 @@
     </div>
   </div>
 
-  <div class="items-box">
+  <div class="items-box f-items">
     <div class="table-wrap">
       <table class="tbl items-table">
         <thead><tr><th>Item</th><th>Qty</th><th>Price</th><th class="num">Total</th><th></th></tr></thead>
@@ -44,16 +44,17 @@
     </div>
   </div>
 
-  <div class="field section-gap"><span class="label">Payment</span>
+  <div class="field section-gap f-pay"><span class="label">Payment</span>
     <div class="pay-opts">
       @foreach (['cash' => 'Cash', 'online' => 'Online'] as $k => $v)
         <label><input type="radio" name="payment" value="{{ $k }}" {{ $pay === $k ? 'checked' : '' }}><span>{{ $v }}</span></label>
       @endforeach
     </div>
   </div>
-  <div class="field"><label for="{{ $p }}note">Note <span class="opt">(optional)</span></label><input id="{{ $p }}note" name="note" value="{{ old('note', $sale->note) }}" placeholder="e.g. home delivery"></div>
+  <div class="field f-note"><label for="{{ $p }}note">Note <span class="opt">(optional)</span></label><input id="{{ $p }}note" name="note" value="{{ old('note', $sale->note) }}" placeholder="e.g. home delivery"></div>
 
-  <div class="form-actions">
+  <div class="form-actions f-actions">
+    <span class="fa-total mobile-only"><small class="js-count">No items</small><b class="js-grand">Rs. 0</b></span>
     <button class="btn" type="submit">{{ $editing ? 'Save changes' : 'Save sale' }}</button>
     @if ($modal)
       <button type="button" class="btn btn-ghost" data-close-form>Cancel</button>

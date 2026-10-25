@@ -10,9 +10,7 @@
       <option value="">All categories</option>
       @foreach ($categories as $c)<option {{ $cat === $c ? 'selected' : '' }}>{{ $c }}</option>@endforeach
     </select>
-    <input type="date" name="from" value="{{ $from }}" aria-label="From date"><span>to</span>
-    <input type="date" name="to" value="{{ $to }}" aria-label="To date">
-    <button class="btn btn-ghost btn-sm"><x-icon name="filter" size="15" />Filter</button>
+    @include('partials.range', ['route' => 'expenses.index', 'keep' => ['category' => $cat]])
   </form>
 @endsection
 
@@ -26,17 +24,17 @@
   </div>
   <div class="card card-flush">
     <div class="table-wrap">
-      <table class="tbl">
+      <table class="tbl cards">
         <thead><tr><th>Date</th><th>Category</th><th>Paid to / note</th><th>Status</th><th class="num">Amount</th><th></th></tr></thead>
         <tbody>
           @forelse ($expenses as $x)
             @php $detail = collect([$x->vendor, $x->note])->filter()->implode(' · '); @endphp
             <tr>
-              <td class="date">{{ $x->date->format('j M Y') }}</td>
-              <td>{{ $x->category }}</td>
-              <td class="{{ $detail ? '' : 'sub' }}">{{ $detail ?: '—' }}</td>
-              <td><span class="pill {{ $x->status }}">{{ ucfirst($x->status) }}</span></td>
-              <td class="num">{{ $rs($x->amount) }}</td>
+              <td class="date c-date">{{ $x->date->format('j M Y') }}</td>
+              <td class="c-title">{{ $x->category }}</td>
+              <td class="c-sub {{ $detail ? '' : 'sub' }}">{{ $detail ?: '—' }}</td>
+              <td class="c-pill"><span class="pill {{ $x->status }}">{{ ucfirst($x->status) }}</span></td>
+              <td class="num c-amt">{{ $rs($x->amount) }}</td>
               <td class="act">
                 <a href="{{ route('expenses.edit', $x) }}" data-modal-form aria-label="Edit expense" title="Edit"><x-icon name="pencil" size="15" /></a>
                 <form method="POST" action="{{ route('expenses.destroy', $x) }}" class="inline" data-confirm="Delete this expense?" data-confirm-text="This {{ $x->category }} expense of {{ $rs($x->amount) }} will be removed permanently. This cannot be undone." data-confirm-ok="Delete expense">@csrf @method('DELETE')<button type="submit" class="del" aria-label="Delete expense" title="Delete"><x-icon name="trash" size="15" /></button></form>

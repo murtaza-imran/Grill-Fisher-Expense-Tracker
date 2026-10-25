@@ -35,7 +35,7 @@
     <div class="field full"><label for="{{ $p }}note">Note <span class="opt">(optional)</span></label><input id="{{ $p }}note" name="note" value="{{ old('note', $expense->note) }}" placeholder="e.g. 10 kg rohu"></div>
   </div>
 
-  <div class="form-actions">
+  <div class="form-actions f-actions">
     <button class="btn" type="submit">{{ $editing ? 'Save changes' : 'Save expense' }}</button>
     @if ($modal)
       <button type="button" class="btn btn-ghost" data-close-form>Cancel</button>

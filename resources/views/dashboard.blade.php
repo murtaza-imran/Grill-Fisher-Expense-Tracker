@@ -39,7 +39,7 @@
 @section('content')
   <div class="dash">
     <div class="dash-main">
-      <section class="panel glow">
+      <section class="panel glow p-track">
         <div class="card-head">
           <div><span class="eyebrow">Earnings</span><div class="title">Tracking our sales</div></div>
           <div class="seg" role="group" aria-label="Range">
@@ -67,7 +67,7 @@
             </details>
           </div>
 
-          <div class="tile assist">
+          <div class="tile assist hide-m">
             <span class="hi">Hi {{ \Illuminate\Support\Str::of(auth()->user()->name)->before(' ') }} ✦</span>
             <h4>What would you like to do today?</h4>
             <div class="acts">
@@ -86,7 +86,7 @@
       </section>
 
       <div class="duo">
-        <section class="panel">
+        <section class="panel p-money">
           <div class="card-head">
             <div><span class="eyebrow">Expenses this month</span><div class="title">Where money goes</div></div>
             <a href="{{ route('expenses.index') }}" class="circle sm" aria-label="Open expenses"><x-icon name="arrow-out" size="15" /></a>
@@ -111,7 +111,7 @@
           @endif
         </section>
 
-        <section class="panel">
+        <section class="panel p-busy">
           <div class="card-head">
             <div><span class="eyebrow">Busy hours · last 30 days</span><div class="title">Order time tracking</div></div>
           </div>
@@ -141,7 +141,7 @@
       </div>
 
       <div class="duo duo-fill">
-        <section class="panel">
+        <section class="panel p-best">
           <div class="card-head">
             <div><span class="eyebrow">This month</span><div class="title">Best sellers</div></div>
           </div>
@@ -157,7 +157,7 @@
             @endforelse
           </div>
         </section>
-        <section class="panel">
+        <section class="panel p-mix">
           <div class="card-head">
             <div><span class="eyebrow">This month</span><div class="title">Sales mix</div></div>
             <a href="{{ route('reports', ['q' => 'month']) }}" class="circle sm" aria-label="Open this month's report"><x-icon name="arrow-out" size="15" /></a>
@@ -185,7 +185,7 @@
     </div>
 
     <aside class="dash-side">
-      <section class="panel">
+      <section class="panel p-stats">
         <div class="stats">
           <a class="stat" href="{{ route('sales.index') }}">
             <span class="eyebrow">Sales today</span><span class="circle sm go"><x-icon name="arrow-out" size="14" /></span>
@@ -210,7 +210,7 @@
         </div>
       </section>
 
-      <section class="panel">
+      <section class="panel p-recent">
         <div class="card-head">
           <div><span class="eyebrow">Latest entries</span><div class="title">Recent activity</div></div>
           <a href="{{ route('reports') }}" class="circle sm" aria-label="See all entries"><x-icon name="arrow-out" size="15" /></a>
