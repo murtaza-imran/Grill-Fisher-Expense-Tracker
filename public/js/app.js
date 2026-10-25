@@ -366,6 +366,37 @@ function initSaleForm(form) {
 }
 $$('form.sale-form').forEach(initSaleForm);
 
+/* ---------- sale form: BBQ / Fish / Other — one or more, each with an amount ---------- */
+function initCatForm(form) {
+  if (!form || !$('.cat-toggle', form) || form.dataset.catReady) return;
+  form.dataset.catReady = '1';
+  const update = () => {
+    let sum = 0, shown = 0;
+    $$('.cat-amount', form).forEach(box => {
+      const on = $(`.cat-toggle[value="${box.dataset.cat}"]`, form).checked, input = $('input', box);
+      box.hidden = !on; input.required = on;
+      if (!on) input.value = '';
+      if (on) { shown++; sum += Math.max(0, +input.value || 0); }
+    });
+    $('.js-cat-hint', form).hidden = shown > 0;
+    $('.js-cat-totalrow', form).hidden = shown < 2;
+    $$('.js-cat-total', form).forEach(el => { el.textContent = rs(sum); });
+  };
+  $$('.cat-toggle', form).forEach(t => t.addEventListener('change', () => {
+    update();
+    if (t.checked) { const i = $(`.cat-amount[data-cat="${t.value}"] input`, form); if (i) i.focus(); }
+  }));
+  $$('.cat-amount input', form).forEach(i => i.addEventListener('input', update));
+  form.addEventListener('submit', e => {
+    if (!$$('.cat-toggle', form).some(t => t.checked)) {
+      e.preventDefault(); e.stopImmediatePropagation();
+      popup({ title: 'What did you sell?', text: 'Tap BBQ, Fish or Other (one or more) and enter the amount.', ok: 'Got it', kind: 'info', alertOnly: true });
+    }
+  });
+  update();
+}
+$$('form.sale-form').forEach(initCatForm);
+
 /* ---------- add / edit in a pop-up form ---------- */
 const formModal = $('#formModal'), formBody = $('#formModalBody');
 let formReturn = null;
@@ -388,6 +419,7 @@ async function openForm(url) {
     formBody.innerHTML = await res.text();
     const form = $('form.js-ajax', formBody);
     initSaleForm(form);
+    initCatForm(form);
     const first = $('[autofocus]', form) || $('input:not([type=hidden]):not([type=date])', form);
     if (first) first.focus();
   } catch (err) {

@@ -20,10 +20,21 @@ class Sale extends Model
 
     public function summary(): string
     {
-        if ($this->items->count() === 1 && $this->items->first()->qty === 1) {
-            return $this->items->first()->name;
+        if ($this->items->every(fn ($i) => $i->qty === 1)) {
+            return $this->items->pluck('name')->implode(' + ');
         }
         return $this->items->map(fn ($i) => "{$i->qty}× {$i->name}")->implode(', ');
+    }
+
+    /** Amount per category, e.g. ['BBQ' => 1200, 'Fish' => 1730]. Older menu-item sales count as Other. */
+    public function categoryAmounts(): array
+    {
+        $out = [];
+        foreach ($this->items as $i) {
+            $cat = in_array($i->name, self::CATEGORIES, true) ? $i->name : 'Other';
+            $out[$cat] = ($out[$cat] ?? 0) + $i->qty * $i->price;
+        }
+        return $out;
     }
 
     /** BBQ / Fish / Other — older sales made from menu items count as Other. */

@@ -6,6 +6,7 @@ use App\Models\Sale;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class SaleController extends Controller
 {
@@ -83,19 +84,25 @@ class SaleController extends Controller
     private function save(Sale $sale, Request $request): Sale
     {
         $data = $request->validate([
-            'category' => 'required|in:' . implode(',', Sale::CATEGORIES),
-            'amount' => 'required|integer|min:1|max:100000000',
+            'amounts' => 'nullable|array',
+            'amounts.*' => 'nullable|integer|min:1|max:100000000',
             'payment' => 'required|in:cash,online',
             'date' => 'required|date',
-        ], [
-            'category.required' => 'Choose BBQ, Fish or Other.',
-            'amount.required' => 'Enter the sale amount.',
-            'amount.min' => 'Enter the sale amount.',
-        ]);
+        ], ['amounts.*.min' => 'Enter an amount above 0.', 'amounts.*.integer' => 'Enter the amount in rupees.']);
 
-        $sale->fill(['date' => $data['date'], 'payment' => $data['payment'], 'total' => $data['amount'], 'customer' => null, 'note' => null])->save();
+        // BBQ / Fish / Other — any of them, each with its own amount
+        $amounts = collect($data['amounts'] ?? [])->only(Sale::CATEGORIES)->filter(fn ($v) => (int) $v > 0)->map(fn ($v) => (int) $v);
+        if ($amounts->isEmpty()) {
+            throw ValidationException::withMessages(['amounts' => 'Choose BBQ, Fish or Other and enter the amount.']);
+        }
+
+        $sale->fill(['date' => $data['date'], 'payment' => $data['payment'], 'total' => $amounts->sum(), 'customer' => null, 'note' => null])->save();
         $sale->items()->delete();
-        $sale->items()->create(['name' => $data['category'], 'qty' => 1, 'price' => $data['amount']]);
+        foreach (Sale::CATEGORIES as $cat) {
+            if ($amounts->has($cat)) {
+                $sale->items()->create(['name' => $cat, 'qty' => 1, 'price' => $amounts[$cat]]);
+            }
+        }
         return $sale;
     }
 }
