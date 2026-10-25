@@ -558,3 +558,14 @@ body.locked { overflow: hidden; }
 .pill.paid { color: var(--good); background: var(--good-soft); }
 .pill.pending { color: var(--gold-2); background: var(--gold-soft); }
 .kpi strong.pend { color: var(--gold-2); }
+
+.mobile-only { display: none; }
+.circle.on { color: var(--gold-2); border-color: var(--gold-line); background: var(--gold-soft); }
+@media (max-width: 960px) { .mobile-only { display: inline-grid; } }
+@media (max-width: 600px) {
+  .bar > .toolbar .search, .bar > .toolbar select, .bar > .toolbar .seg { flex: 1 1 100%; max-width: none; }
+  .bar > .toolbar .seg { justify-content: space-between; overflow-x: auto; }
+  .bar > .toolbar input[type=date] { flex: 1 1 0; min-width: 0; width: auto; padding: 0 10px; }
+  .bar > .actions { width: 100%; }
+  .bar > .actions .btn { flex: 1; }
+}

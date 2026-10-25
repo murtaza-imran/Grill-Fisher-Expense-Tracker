@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ asset('css/app.css') }}?v=19">
+  <link rel="stylesheet" href="{{ asset('css/app.css') }}?v=21">
 </head>
 <body>
 @php
@@ -36,7 +36,7 @@
         @endforeach
       </nav>
       <div class="topbar-right">
-        <a href="{{ route('sales.index') }}" class="circle" aria-label="Search sales" title="Search sales"><x-icon name="search" size="17" /></a>
+        <a href="{{ route('settings') }}" class="circle mobile-only {{ request()->routeIs('settings*') ? 'on' : '' }}" aria-label="Settings" title="Settings"><x-icon name="settings" size="17" /></a>
         @include('partials.export', ['dataset' => 'report', 'round' => true, 'label' => 'This month · download as', 'params' => ['from' => now()->startOfMonth()->toDateString(), 'to' => now()->toDateString()]])
         <div class="me">
           <span class="avatar">{{ mb_strtoupper(mb_substr($user->name, 0, 1)) }}</span>
@@ -67,8 +67,12 @@
         @yield('toolbar')
         <div class="actions">
           @yield('headActions')
-          <a href="{{ route('expenses.create') }}" data-modal-form class="btn btn-ghost"><x-icon name="plus" size="16" />Expense</a>
-          <a href="{{ route('sales.create') }}" data-modal-form class="btn"><x-icon name="plus" size="16" />New sale</a>
+          @unless (request()->routeIs('sales.*'))
+            <a href="{{ route('expenses.create') }}" data-modal-form class="btn {{ request()->routeIs('expenses.*') ? '' : 'btn-ghost' }}"><x-icon name="plus" size="16" />{{ request()->routeIs('expenses.*') ? 'Add expense' : 'Expense' }}</a>
+          @endunless
+          @unless (request()->routeIs('expenses.*'))
+            <a href="{{ route('sales.create') }}" data-modal-form class="btn"><x-icon name="plus" size="16" />New sale</a>
+          @endunless
         </div>
       </div>
     @else
@@ -79,8 +83,12 @@
         </div>
         <div class="actions">
           @yield('headActions')
-          <a href="{{ route('expenses.create') }}" data-modal-form class="btn btn-ghost"><x-icon name="plus" size="16" />Expense</a>
-          <a href="{{ route('sales.create') }}" data-modal-form class="btn"><x-icon name="plus" size="16" />New sale</a>
+          @unless (request()->routeIs('sales.*'))
+            <a href="{{ route('expenses.create') }}" data-modal-form class="btn {{ request()->routeIs('expenses.*') ? '' : 'btn-ghost' }}"><x-icon name="plus" size="16" />{{ request()->routeIs('expenses.*') ? 'Add expense' : 'Expense' }}</a>
+          @endunless
+          @unless (request()->routeIs('expenses.*'))
+            <a href="{{ route('sales.create') }}" data-modal-form class="btn"><x-icon name="plus" size="16" />New sale</a>
+          @endunless
         </div>
       </div>
     @endif
@@ -91,7 +99,11 @@
   <nav class="bnav" aria-label="Quick">
     <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}"><x-icon name="dashboard" size="20" />Home</a>
     <a href="{{ route('sales.index') }}" class="{{ request()->routeIs('sales.*') ? 'active' : '' }}"><x-icon name="receipt" size="20" />Sales</a>
-    <a href="{{ route('sales.create') }}" data-modal-form class="bnav-add" aria-label="New sale"><x-icon name="plus" size="22" /></a>
+    @if (request()->routeIs('expenses.*'))
+      <a href="{{ route('expenses.create') }}" data-modal-form class="bnav-add" aria-label="Add expense"><x-icon name="plus" size="22" /></a>
+    @else
+      <a href="{{ route('sales.create') }}" data-modal-form class="bnav-add" aria-label="New sale"><x-icon name="plus" size="22" /></a>
+    @endif
     <a href="{{ route('expenses.index') }}" class="{{ request()->routeIs('expenses.*') ? 'active' : '' }}"><x-icon name="wallet" size="20" />Expenses</a>
     <a href="{{ route('reports') }}" class="{{ request()->routeIs('reports*') ? 'active' : '' }}"><x-icon name="chart" size="20" />Reports</a>
   </nav>
