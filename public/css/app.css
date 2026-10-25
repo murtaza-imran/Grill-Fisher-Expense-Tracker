@@ -783,8 +783,7 @@ body { -webkit-tap-highlight-color: transparent; }
   /* Sales / Expenses: the add button sits right on top, big */
   .bar > .actions { order: -1; width: 100%; }
   .bar > .actions > a.btn { display: inline-flex; flex: 1; height: 54px; font-size: 16px; border-radius: 18px; }
-  .page-reports .bar > .actions > a.btn { display: none; }
-  .page-reports .bar > .actions { order: 0; width: auto; }
+  .page-reports .bar > .actions .dd { display: none; } /* export is in the top bar */
 
   /* bottom bar: "+" gets a label */
   .bnav .bnav-add { position: relative; overflow: visible; width: 50px; height: 50px; margin-top: -14px; }
@@ -884,3 +883,14 @@ body { -webkit-tap-highlight-color: transparent; }
 .cat-opts input:checked + span .ic { color: var(--gold-2); }
 .amount-input { height: 60px !important; font-size: 26px !important; font-weight: 700; letter-spacing: -.5px; }
 .sale-form .f-items { margin-top: 18px; }
+
+@media (max-width: 960px) {
+  /* bottom bar: Add is a normal tab, lined up with the others */
+  .bnav a.bnav-add, .bnav button.bnav-add { width: auto; height: auto; margin: 0; padding: 6px 0; border-radius: 0; background: none; box-shadow: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--gold-2); font-size: 11px; font-weight: 700; }
+  .bnav .bnav-add::after { content: none; }
+  .bnav-plus { width: 44px; height: 30px; border-radius: 11px; display: grid; place-items: center; background: linear-gradient(180deg, var(--gold-2), var(--gold-deep)); color: var(--on-gold); box-shadow: 0 4px 14px rgba(232, 169, 26, .4); }
+  .bnav .bnav-add:active .bnav-plus { transform: scale(.94); }
+  .bnav { align-items: end; padding: 8px 6px; }
+  .bnav a { gap: 4px; }
+  .bnav a:not(.bnav-add) .ic { margin-bottom: 5px; }
+}

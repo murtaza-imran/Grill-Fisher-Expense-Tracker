@@ -108,11 +108,11 @@
     <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}"><x-icon name="dashboard" size="20" />Home</a>
     <a href="{{ route('sales.index') }}" class="{{ request()->routeIs('sales.*') ? 'active' : '' }}"><x-icon name="receipt" size="20" />Sales</a>
     @if (request()->routeIs('expenses.*'))
-      <a href="{{ route('expenses.create') }}" data-modal-form class="bnav-add" aria-label="Add expense"><x-icon name="plus" size="24" /></a>
+      <a href="{{ route('expenses.create') }}" data-modal-form class="bnav-add" aria-label="Add expense"><span class="bnav-plus"><x-icon name="plus" size="22" /></span><span>Add</span></a>
     @elseif (request()->routeIs('sales.*'))
-      <a href="{{ route('sales.create') }}" data-modal-form class="bnav-add" aria-label="New sale"><x-icon name="plus" size="24" /></a>
+      <a href="{{ route('sales.create') }}" data-modal-form class="bnav-add" aria-label="New sale"><span class="bnav-plus"><x-icon name="plus" size="22" /></span><span>Add</span></a>
     @else
-      <button type="button" class="bnav-add" data-open-sheet aria-label="Add sale or expense"><x-icon name="plus" size="24" /></button>
+      <button type="button" class="bnav-add" data-open-sheet aria-label="Add sale or expense"><span class="bnav-plus"><x-icon name="plus" size="22" /></span><span>Add</span></button>
     @endif
     <a href="{{ route('expenses.index') }}" class="{{ request()->routeIs('expenses.*') ? 'active' : '' }}"><x-icon name="wallet" size="20" />Expenses</a>
     <a href="{{ route('reports') }}" class="{{ request()->routeIs('reports*') ? 'active' : '' }}"><x-icon name="chart" size="20" />Reports</a>
