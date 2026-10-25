@@ -17,17 +17,17 @@
 @endsection
 
 @section('content')
-  @php $tot = (int) $totals->t; $cash = (int) $totals->cash; $online = (int) $totals->online; @endphp
+  @php $tot = (int) $totals->t; $paid = (int) $totals->paid; $pending = (int) $totals->pending; $pendingN = (int) $totals->pending_n; @endphp
   <div class="kpis kpis-3">
     <div class="kpi"><div class="kpi-top"><small>Total expenses</small><span class="kpi-ic blue"><x-icon name="trend-down" size="16" /></span></div><strong>{{ $rs($tot) }}</strong><span>{{ \Carbon\Carbon::parse($from)->format('j M') }} – {{ \Carbon\Carbon::parse($to)->format('j M') }}</span></div>
+    <div class="kpi"><div class="kpi-top"><small>Paid</small><span class="kpi-ic good"><x-icon name="check" size="16" /></span></div><strong>{{ $rs($paid) }}</strong><span>{{ $tot ? round($paid / $tot * 100) . '% of total' : '—' }}</span></div>
+    <div class="kpi"><div class="kpi-top"><small>Pending</small><span class="kpi-ic gold"><x-icon name="alert" size="16" /></span></div><strong class="{{ $pending ? 'pend' : '' }}">{{ $rs($pending) }}</strong><span>{{ $pendingN ? $pendingN . ' ' . Str::plural('bill', $pendingN) . ' still to pay' : 'Nothing pending' }}</span></div>
     <div class="kpi"><div class="kpi-top"><small>Entries</small><span class="kpi-ic "><x-icon name="receipt" size="16" /></span></div><strong>{{ number_format($totals->n) }}</strong><span>{{ $topCat ? 'Biggest: ' . $topCat : 'No expenses yet' }}</span></div>
-    <div class="kpi"><div class="kpi-top"><small>Paid cash</small><span class="kpi-ic good"><x-icon name="banknote" size="16" /></span></div><strong>{{ $rs($cash) }}</strong><span>{{ $tot ? round($cash / $tot * 100) . '% of total' : '—' }}</span></div>
-    <div class="kpi"><div class="kpi-top"><small>Paid online</small><span class="kpi-ic gold"><x-icon name="wallet" size="16" /></span></div><strong>{{ $rs($online) }}</strong><span>{{ $tot ? round($online / $tot * 100) . '% of total' : '—' }}</span></div>
   </div>
   <div class="card card-flush">
     <div class="table-wrap">
       <table class="tbl">
-        <thead><tr><th>Date</th><th>Category</th><th>Paid to / note</th><th>Payment</th><th class="num">Amount</th><th></th></tr></thead>
+        <thead><tr><th>Date</th><th>Category</th><th>Paid to / note</th><th>Status</th><th class="num">Amount</th><th></th></tr></thead>
         <tbody>
           @forelse ($expenses as $x)
             @php $detail = collect([$x->vendor, $x->note])->filter()->implode(' · '); @endphp
@@ -35,7 +35,7 @@
               <td class="date">{{ $x->date->format('j M Y') }}</td>
               <td>{{ $x->category }}</td>
               <td class="{{ $detail ? '' : 'sub' }}">{{ $detail ?: '—' }}</td>
-              <td><span class="pill {{ $x->payment }}">{{ ucfirst($x->payment) }}</span></td>
+              <td><span class="pill {{ $x->status }}">{{ ucfirst($x->status) }}</span></td>
               <td class="num">{{ $rs($x->amount) }}</td>
               <td class="act">
                 <a href="{{ route('expenses.edit', $x) }}" data-modal-form aria-label="Edit expense" title="Edit"><x-icon name="pencil" size="15" /></a>

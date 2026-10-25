@@ -33,7 +33,7 @@ class ReportController extends Controller
                 'edit' => route('sales.edit', $s), 'del' => route('sales.destroy', $s)]))
             ->merge(Expense::whereBetween('date', [$from, $to])->get()->map(fn ($e) => [
                 'date' => $e->date->toDateString(), 'key' => $e->date->format('Ymd') . str_pad($e->id, 9, '0', STR_PAD_LEFT),
-                'type' => 'Expense', 'detail' => $e->category . ($e->note ? ' — ' . $e->note : ''), 'party' => $e->vendor, 'pay' => ucfirst($e->payment), 'amount' => -$e->amount,
+                'type' => 'Expense', 'detail' => $e->category . ($e->note ? ' — ' . $e->note : ''), 'party' => $e->vendor, 'pay' => ucfirst($e->status), 'amount' => -$e->amount,
                 'edit' => route('expenses.edit', $e), 'del' => route('expenses.destroy', $e)]))
             ->sortByDesc('key')->values();
     }

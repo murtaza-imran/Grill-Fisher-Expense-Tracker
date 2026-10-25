@@ -19,7 +19,7 @@ class ExpenseController extends Controller
         if ($cat !== '') {
             $query->where('category', $cat);
         }
-        $totals = (clone $query)->toBase()->selectRaw("COUNT(*) n, COALESCE(SUM(amount), 0) t, COALESCE(SUM(CASE WHEN payment = 'cash' THEN amount END), 0) cash, COALESCE(SUM(CASE WHEN payment = 'online' THEN amount END), 0) online")->first();
+        $totals = (clone $query)->toBase()->selectRaw("COUNT(*) n, COALESCE(SUM(amount), 0) t, COALESCE(SUM(CASE WHEN status = 'paid' THEN amount END), 0) paid, COALESCE(SUM(CASE WHEN status = 'pending' THEN amount END), 0) pending, COALESCE(SUM(CASE WHEN status = 'pending' THEN 1 END), 0) pending_n")->first();
         $topCat = (clone $query)->selectRaw('category, SUM(amount) v')->groupBy('category')->orderByDesc('v')->value('category');
         $expenses = $query->orderByDesc('date')->orderByDesc('id')->paginate(15)->withQueryString();
         $categories = ExpenseCategory::orderBy('name')->pluck('name');
@@ -28,7 +28,7 @@ class ExpenseController extends Controller
 
     public function create()
     {
-        return $this->form(new Expense(['date' => Carbon::today(), 'payment' => 'cash']));
+        return $this->form(new Expense(['date' => Carbon::today(), 'status' => 'paid']));
     }
 
     public function edit(Expense $expense)
@@ -51,7 +51,7 @@ class ExpenseController extends Controller
         session()->flash('saved', [
             'title' => 'Expense saved',
             'amount' => 'Rs. ' . number_format($e->amount),
-            'text' => $e->category . ($e->vendor ? ' · ' . $e->vendor : '') . ' · ' . ucfirst($e->payment),
+            'text' => $e->category . ($e->vendor ? ' · ' . $e->vendor : '') . ' · ' . ucfirst($e->status),
             'ok' => 'Add another expense',
             'again' => route('expenses.create'),
             'alt' => ['label' => 'View expenses', 'href' => route('expenses.index')],
@@ -65,7 +65,7 @@ class ExpenseController extends Controller
         session()->flash('saved', [
             'title' => 'Expense updated',
             'amount' => 'Rs. ' . number_format($expense->amount),
-            'text' => $expense->category . ($expense->vendor ? ' · ' . $expense->vendor : '') . ' · ' . ucfirst($expense->payment),
+            'text' => $expense->category . ($expense->vendor ? ' · ' . $expense->vendor : '') . ' · ' . ucfirst($expense->status),
             'ok' => 'Done',
         ]);
         return $request->expectsJson() ? response()->json(['ok' => true]) : redirect()->route('expenses.index');
@@ -87,7 +87,7 @@ class ExpenseController extends Controller
             'amount' => 'required|integer|min:1|max:100000000',
             'category' => 'required|string|max:80',
             'vendor' => 'nullable|string|max:120',
-            'payment' => 'required|in:cash,online',
+            'status' => 'required|in:paid,pending',
             'note' => 'nullable|string|max:255',
         ]);
 

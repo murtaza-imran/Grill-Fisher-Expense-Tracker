@@ -2,7 +2,7 @@
 @php
   $editing = $expense->exists;
   $p = $modal ? 'm-' : '';
-  $pay = old('payment', $expense->payment ?? 'cash');
+  $status = old('status', $expense->status ?? 'paid');
 @endphp
 <form method="POST" action="{{ $editing ? route('expenses.update', $expense) : route('expenses.store') }}" class="expense-form {{ $modal ? 'js-ajax' : 'card page-card' }}">
   @csrf
@@ -24,12 +24,13 @@
       </select>
     </div>
     <div class="field"><label for="{{ $p }}vendor">Paid to <span class="opt">(optional)</span></label><input id="{{ $p }}vendor" name="vendor" value="{{ old('vendor', $expense->vendor) }}" placeholder="e.g. fish market, staff name"></div>
-    <div class="field full"><span class="label">Payment</span>
+    <div class="field full"><span class="label">Status</span>
       <div class="pay-opts">
-        @foreach (['cash' => 'Cash', 'online' => 'Online'] as $k => $v)
-          <label><input type="radio" name="payment" value="{{ $k }}" {{ $pay === $k ? 'checked' : '' }}><span>{{ $v }}</span></label>
+        @foreach (['paid' => 'Paid', 'pending' => 'Pending'] as $k => $v)
+          <label><input type="radio" name="status" value="{{ $k }}" {{ $status === $k ? 'checked' : '' }}><span>{{ $v }}</span></label>
         @endforeach
       </div>
+      <span class="hint">Pending = you still have to pay this amount.</span>
     </div>
     <div class="field full"><label for="{{ $p }}note">Note <span class="opt">(optional)</span></label><input id="{{ $p }}note" name="note" value="{{ old('note', $expense->note) }}" placeholder="e.g. 10 kg rohu"></div>
   </div>

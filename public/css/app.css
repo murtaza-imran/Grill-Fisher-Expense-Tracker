@@ -554,3 +554,7 @@ body.locked { overflow: hidden; }
 @media (max-width: 600px) { .fmt-btns { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
 .grid2.top { align-items: start; }
+
+.pill.paid { color: var(--good); background: var(--good-soft); }
+.pill.pending { color: var(--gold-2); background: var(--gold-soft); }
+.kpi strong.pend { color: var(--gold-2); }

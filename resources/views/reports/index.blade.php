@@ -44,7 +44,7 @@
     <div class="card-head"><h3>All entries</h3><small>{{ \Carbon\Carbon::parse($from)->format('j M Y') }} – {{ \Carbon\Carbon::parse($to)->format('j M Y') }}</small></div>
     <div class="table-wrap">
       <table class="tbl">
-        <thead><tr><th>Date</th><th>Type</th><th>Detail</th><th>Customer / paid to</th><th>Payment</th><th class="num">Amount</th><th></th></tr></thead>
+        <thead><tr><th>Date</th><th>Type</th><th>Detail</th><th>Customer / paid to</th><th>Payment / status</th><th class="num">Amount</th><th></th></tr></thead>
         <tbody>
           @forelse ($rows as $r)
             <tr>

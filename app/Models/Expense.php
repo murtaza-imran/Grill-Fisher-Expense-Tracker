@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Expense extends Model
 {
-    protected $fillable = ['date', 'category', 'amount', 'vendor', 'payment', 'note'];
+    protected $fillable = ['date', 'category', 'amount', 'vendor', 'status', 'note'];
     protected $casts = ['date' => 'date'];
 
     /** Store plain Y-m-d so date filters ("up to today") include today's entries. */

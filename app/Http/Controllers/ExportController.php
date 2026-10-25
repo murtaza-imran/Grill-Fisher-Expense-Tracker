@@ -105,12 +105,13 @@ class ExportController extends Controller
         $list = $query->orderByDesc('date')->orderByDesc('id')->get();
         return new Exporter(
             'Expenses', $this->period($from, $to) . ($cat !== '' ? " · $cat" : ''),
-            ['Date', 'Category', 'Paid to', 'Note', 'Payment', 'Amount (Rs.)'],
-            $list->map(fn ($x) => [$x->date->format('d M Y'), $x->category, $x->vendor ?? '', $x->note ?? '', ucfirst($x->payment), (int) $x->amount])->all(),
+            ['Date', 'Category', 'Paid to', 'Note', 'Status', 'Amount (Rs.)'],
+            $list->map(fn ($x) => [$x->date->format('d M Y'), $x->category, $x->vendor ?? '', $x->note ?? '', ucfirst($x->status), (int) $x->amount])->all(),
             [5],
             [
-                'Total expenses' => $this->rs((int) $list->sum('amount')), 'Entries' => (string) $list->count(),
-                'Paid cash' => $this->rs((int) $list->where('payment', 'cash')->sum('amount')), 'Paid online' => $this->rs((int) $list->where('payment', 'online')->sum('amount')),
+                'Total expenses' => $this->rs((int) $list->sum('amount')),
+                'Paid' => $this->rs((int) $list->where('status', 'paid')->sum('amount')), 'Pending' => $this->rs((int) $list->where('status', 'pending')->sum('amount')),
+                'Entries' => (string) $list->count(),
             ],
             "grill-fisher-expenses_{$from}_to_{$to}",
         );
