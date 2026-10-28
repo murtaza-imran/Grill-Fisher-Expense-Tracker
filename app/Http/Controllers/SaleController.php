@@ -27,7 +27,18 @@ class SaleController extends Controller
 
     public function create()
     {
-        return $this->form(new Sale(['date' => Carbon::today(), 'payment' => 'cash']));
+        return $this->form(new Sale(['date' => $this->dayFromQuery(), 'payment' => 'cash']));
+    }
+
+    /** ?date=YYYY-MM-DD from the Today page (never in the future). */
+    private function dayFromQuery(): Carbon
+    {
+        try {
+            $d = request('date') ? Carbon::parse(request('date')) : Carbon::today();
+        } catch (\Throwable) {
+            $d = Carbon::today();
+        }
+        return $d->greaterThan(Carbon::today()) ? Carbon::today() : $d;
     }
 
     public function edit(Sale $sale)

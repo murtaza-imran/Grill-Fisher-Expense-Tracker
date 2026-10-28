@@ -20,6 +20,7 @@ Artisan::command('data:reset {--force : Do not ask for confirmation}', function 
         DB::table('sale_items')->delete();
         DB::table('sales')->delete();
         DB::table('expenses')->delete();
+        DB::table('day_closings')->delete();
     });
     $this->info("Deleted {$sales} sales and {$expenses} expenses. Your login and expense categories are kept.");
     return 0;

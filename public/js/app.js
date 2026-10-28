@@ -112,6 +112,15 @@ document.addEventListener('click', e => {
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
 
+/* ---------- expense form: Daily / Monthly follows the category ---------- */
+document.addEventListener('change', e => {
+  const sel = e.target.closest('select[data-kind-sync]');
+  if (!sel) return;
+  const kind = sel.selectedOptions[0] && sel.selectedOptions[0].dataset.kind;
+  const radio = kind && sel.form.querySelector(`input[name="kind"][value="${kind}"]`);
+  if (radio) radio.checked = true;
+});
+
 /* ---------- phone: "Custom" date range toggle ---------- */
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-toggle-dates]');

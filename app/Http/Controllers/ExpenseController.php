@@ -28,7 +28,13 @@ class ExpenseController extends Controller
 
     public function create()
     {
-        return $this->form(new Expense(['date' => Carbon::today(), 'status' => 'paid']));
+        try {
+            $date = request('date') ? Carbon::parse(request('date')) : Carbon::today();
+        } catch (\Throwable) {
+            $date = Carbon::today();
+        }
+        $kind = in_array(request('kind'), ['daily', 'monthly'], true) ? request('kind') : null;
+        return $this->form(new Expense(['date' => $date->greaterThan(Carbon::today()) ? Carbon::today() : $date, 'status' => 'paid', 'kind' => $kind]));
     }
 
     public function edit(Expense $expense)
@@ -41,7 +47,7 @@ class ExpenseController extends Controller
         return view(request()->ajax() ? 'expenses._form' : 'expenses.form', [
             'modal' => request()->ajax(),
             'expense' => $expense,
-            'categories' => ExpenseCategory::orderBy('name')->pluck('name'),
+            'categories' => ExpenseCategory::orderBy('name')->get(['name', 'kind']),
         ]);
     }
 
@@ -86,6 +92,7 @@ class ExpenseController extends Controller
             'date' => 'required|date',
             'amount' => 'required|integer|min:1|max:100000000',
             'category' => 'required|string|max:80',
+            'kind' => 'required|in:daily,monthly',
             'vendor' => 'nullable|string|max:120',
             'status' => 'required|in:paid,pending',
             'note' => 'nullable|string|max:255',

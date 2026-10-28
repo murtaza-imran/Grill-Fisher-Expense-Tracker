@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DayBookController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\ReportController;
@@ -19,6 +20,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
+    Route::get('/today', [DayBookController::class, 'today'])->name('daybook');
+    Route::post('/today/close', [DayBookController::class, 'close'])->name('daybook.close');
+    Route::post('/today/reopen', [DayBookController::class, 'reopen'])->name('daybook.reopen');
+    Route::get('/month', [DayBookController::class, 'month'])->name('daybook.month');
+
     Route::resource('sales', SaleController::class)->except('show');
     Route::resource('expenses', ExpenseController::class)->except('show');
 
@@ -29,6 +35,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
     Route::post('/settings/categories', [SettingsController::class, 'addCategory'])->name('settings.categories.store');
+    Route::put('/settings/categories/{category}/kind', [SettingsController::class, 'toggleKind'])->name('settings.categories.kind');
     Route::delete('/settings/categories/{category}', [SettingsController::class, 'deleteCategory'])->name('settings.categories.destroy');
     Route::put('/settings/password', [SettingsController::class, 'password'])->name('settings.password');
     Route::get('/settings/backup', [SettingsController::class, 'backup'])->name('settings.backup');

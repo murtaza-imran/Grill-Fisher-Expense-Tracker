@@ -30,9 +30,10 @@ class DashboardController extends Controller
         $sumExp = fn ($a, $b) => (int) Expense::whereBetween('date', $ymd($a, $b))->sum('amount');
 
         $salesToday = Sale::where('date', $today->toDateString())->get();
-        $expToday = Expense::where('date', $today->toDateString())->get();
+        // today / yesterday use DAILY expenses only — monthly costs (rent, salary…) count in the month
+        $expToday = Expense::where('date', $today->toDateString())->where('kind', 'daily')->get();
         $salesYest = $sumSales($yesterday, $yesterday);
-        $expYest = $sumExp($yesterday, $yesterday);
+        $expYest = (int) Expense::where('date', $yesterday->toDateString())->where('kind', 'daily')->sum('amount');
         $monthSales = $sumSales($monthStart, $today);
         $monthExp = $sumExp($monthStart, $today);
         $lastMonthProfit = $sumSales($lastMonthStart, $lastMonthSameDay) - $sumExp($lastMonthStart, $lastMonthSameDay);

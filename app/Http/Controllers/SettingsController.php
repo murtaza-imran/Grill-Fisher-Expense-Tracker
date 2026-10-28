@@ -19,8 +19,15 @@ class SettingsController extends Controller
 
     public function addCategory(Request $request)
     {
-        ExpenseCategory::create($request->validate(['name' => 'required|string|max:80|unique:expense_categories,name']));
+        ExpenseCategory::create($request->validate(['name' => 'required|string|max:80|unique:expense_categories,name', 'kind' => 'required|in:daily,monthly']));
         return back()->with('ok', 'Category added');
+    }
+
+    /** Daily ⇄ Monthly. Old expenses keep the type they were saved with. */
+    public function toggleKind(ExpenseCategory $category)
+    {
+        $category->update(['kind' => $category->kind === 'monthly' ? 'daily' : 'monthly']);
+        return back()->with('ok', $category->name . ' is now ' . ($category->kind === 'monthly' ? 'Monthly' : 'Daily'));
     }
 
     public function deleteCategory(ExpenseCategory $category)

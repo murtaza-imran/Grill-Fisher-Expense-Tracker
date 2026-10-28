@@ -6,16 +6,21 @@
   <div class="grid2 top">
     <div>
       <div class="card" data-acc>
-        <div class="set-head"><span class="kpi-ic blue"><x-icon name="tag" size="16" /></span><div><h3>Expense categories <span class="cnt">{{ $categories->count() }}</span></h3><p>Used when you add an expense.</p></div><span class="acc-chev mobile-only"><x-icon name="chevron-down" size="18" /></span></div>
+        <div class="set-head"><span class="kpi-ic blue"><x-icon name="tag" size="16" /></span><div><h3>Expense categories <span class="cnt">{{ $categories->count() }}</span></h3><p>Tap Daily / Monthly to change a category's type.</p></div><span class="acc-chev mobile-only"><x-icon name="chevron-down" size="18" /></span></div>
         <div class="chips">
           @foreach ($categories as $c)
             <form method="POST" action="{{ route('settings.categories.destroy', $c) }}" class="chip" data-confirm="Remove category?" data-confirm-text="{{ $c->name }} will be removed from the list. Past expenses keep their category." data-confirm-ok="Remove">
-              @csrf @method('DELETE') {{ $c->name }} <button type="submit" aria-label="Remove {{ $c->name }}"><x-icon name="x" size="13" /></button>
+              @csrf @method('DELETE') {{ $c->name }}
+              <button type="submit" form="kind{{ $c->id }}" class="kind-btn {{ $c->kind }}" title="Change type">{{ $c->kind === 'monthly' ? 'Monthly' : 'Daily' }}</button>
+              <button type="submit" aria-label="Remove {{ $c->name }}"><x-icon name="x" size="13" /></button>
             </form>
+            <form id="kind{{ $c->id }}" method="POST" action="{{ route('settings.categories.kind', $c) }}" hidden>@csrf @method('PUT')</form>
           @endforeach
         </div>
         <form method="POST" action="{{ route('settings.categories.store') }}" class="row-btns">
-          @csrf <input name="name" placeholder="New category" aria-label="New category" required><button class="btn btn-sm" type="submit"><x-icon name="plus" size="15" />Add</button>
+          @csrf <input name="name" placeholder="New category" aria-label="New category" required>
+          <select name="kind" aria-label="Type" class="kind-select"><option value="daily">Daily</option><option value="monthly">Monthly</option></select>
+          <button class="btn btn-sm" type="submit"><x-icon name="plus" size="15" />Add</button>
         </form>
       </div>
 

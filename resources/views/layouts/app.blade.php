@@ -23,6 +23,8 @@
 @php
   $nav = [
     ['dashboard', 'Dashboard', 'dashboard'],
+    ['daybook', 'Today', 'daybook'],
+    ['daybook.month', 'Month', 'daybook.month'],
     ['sales.index', 'Sales', 'sales.*'],
     ['expenses.index', 'Expenses', 'expenses.*'],
     ['reports', 'Reports', 'reports*'],
@@ -106,6 +108,7 @@
 
   <nav class="bnav" aria-label="Quick">
     <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}"><x-icon name="dashboard" size="20" />Home</a>
+    <a href="{{ route('daybook') }}" class="{{ request()->routeIs('daybook') ? 'active' : '' }}"><x-icon name="calendar" size="20" />Today</a>
     <a href="{{ route('sales.index') }}" class="{{ request()->routeIs('sales.*') ? 'active' : '' }}"><x-icon name="receipt" size="20" />Sales</a>
     @if (request()->routeIs('expenses.*'))
       <a href="{{ route('expenses.create') }}" data-modal-form class="bnav-add" aria-label="Add expense"><span class="bnav-plus"><x-icon name="plus" size="22" /></span><span>Add</span></a>
@@ -115,7 +118,7 @@
       <button type="button" class="bnav-add" data-open-sheet aria-label="Add sale or expense"><span class="bnav-plus"><x-icon name="plus" size="22" /></span><span>Add</span></button>
     @endif
     <a href="{{ route('expenses.index') }}" class="{{ request()->routeIs('expenses.*') ? 'active' : '' }}"><x-icon name="wallet" size="20" />Expenses</a>
-    <a href="{{ route('reports') }}" class="{{ request()->routeIs('reports*') ? 'active' : '' }}"><x-icon name="chart" size="20" />Reports</a>
+    <a href="{{ route('daybook.month') }}" class="{{ request()->routeIs('daybook.month') || request()->routeIs('reports*') ? 'active' : '' }}"><x-icon name="chart" size="20" />Month</a>
   </nav>
 
   <div class="tip" id="tip" role="tooltip" hidden></div>

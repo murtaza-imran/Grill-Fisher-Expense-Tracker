@@ -36,7 +36,7 @@
             @php $detail = collect([$x->vendor, $x->note])->filter()->implode(' · '); @endphp
             <tr>
               <td class="date c-date">{{ $x->date->format('j M Y') }}</td>
-              <td class="c-title">{{ $x->category }}</td>
+              <td class="c-title">{{ $x->category }}@if ($x->kind === 'monthly') <span class="kind-tag">Monthly</span>@endif</td>
               <td class="c-sub {{ $detail ? '' : 'sub' }}">{{ $detail ?: '—' }}</td>
               <td class="c-pill"><span class="pill {{ $x->status }}">{{ ucfirst($x->status) }}</span></td>
               <td class="num c-amt">{{ $rs($x->amount) }}</td>

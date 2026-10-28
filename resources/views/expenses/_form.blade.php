@@ -3,6 +3,9 @@
   $editing = $expense->exists;
   $p = $modal ? 'm-' : '';
   $status = old('status', $expense->status ?? 'paid');
+  // new expense: pick the first category of the asked type; type follows the category unless chosen
+  $selCat = old('category', $expense->category ?? ($expense->kind ? optional($categories->firstWhere('kind', $expense->kind))->name : null));
+  $kind = old('kind', $expense->kind ?: (optional($categories->firstWhere('name', $selCat ?? $categories->first()?->name))->kind ?? 'daily'));
 @endphp
 <form method="POST" action="{{ $editing ? route('expenses.update', $expense) : route('expenses.store') }}" class="expense-form {{ $modal ? 'js-ajax' : 'card page-card' }}">
   @csrf
@@ -19,11 +22,17 @@
     <div class="field"><label for="{{ $p }}amount">Amount (Rs.)</label><input type="number" id="{{ $p }}amount" name="amount" min="1" value="{{ old('amount', $expense->amount) }}" placeholder="0" required autofocus></div>
     <div class="field"><label for="{{ $p }}date">Date</label><input type="date" id="{{ $p }}date" name="date" value="{{ old('date', $expense->date?->toDateString()) }}" required></div>
     <div class="field"><label for="{{ $p }}category">Category</label>
-      <select id="{{ $p }}category" name="category" required>
-        @foreach ($categories as $c)<option {{ old('category', $expense->category) === $c ? 'selected' : '' }}>{{ $c }}</option>@endforeach
+      <select id="{{ $p }}category" name="category" required data-kind-sync>
+        @foreach ($categories as $c)<option data-kind="{{ $c->kind }}" {{ $selCat === $c->name ? 'selected' : '' }}>{{ $c->name }}</option>@endforeach
       </select>
     </div>
     <div class="field"><label for="{{ $p }}vendor">Paid to <span class="opt">(optional)</span></label><input id="{{ $p }}vendor" name="vendor" value="{{ old('vendor', $expense->vendor) }}" placeholder="e.g. fish market, staff name"></div>
+    <div class="field full"><span class="label">Type</span>
+      <div class="pay-opts kind-opts">
+        <label><input type="radio" name="kind" value="daily" {{ $kind === 'daily' ? 'checked' : '' }}><span><b>Daily</b><small>Taken from today's sale</small></span></label>
+        <label><input type="radio" name="kind" value="monthly" {{ $kind === 'monthly' ? 'checked' : '' }}><span><b>Monthly</b><small>Rent, salary, bills, stock</small></span></label>
+      </div>
+    </div>
     <div class="field full"><span class="label">Status</span>
       <div class="pay-opts">
         @foreach (['paid' => 'Paid', 'pending' => 'Pending'] as $k => $v)

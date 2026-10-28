@@ -63,14 +63,14 @@
     <div class="mh-card mh-today">
       <div class="mh-head">
         <span class="mh-title"><x-icon name="calendar" size="16" />Today</span>
-        <a href="{{ route('reports', ['q' => 'today']) }}">Details<x-icon name="chevron-right" size="14" /></a>
+        <a href="{{ route('daybook') }}">Open<x-icon name="chevron-right" size="14" /></a>
       </div>
       <small class="mh-label">Sales</small>
       <strong class="mh-amount">{{ $rs($salesToday) }}</strong>
       <div class="mh-delta">{!! $pill($dSales, 'vs yesterday') !!}</div>
       <div class="mh-stats">
-        <div><small>Expenses</small><b>{{ $rs($expToday) }}</b></div>
-        <div><small>Profit</small><b class="{{ $profitToday < 0 ? 'neg' : 'pos' }}">{{ $profitToday < 0 ? '−' : '' }}{{ $rs(abs($profitToday)) }}</b></div>
+        <div><small>Daily exp.</small><b>{{ $rs($expToday) }}</b></div>
+        <div><small>Day cash</small><b class="{{ $profitToday < 0 ? 'neg' : 'pos' }}">{{ $profitToday < 0 ? '−' : '' }}{{ $rs(abs($profitToday)) }}</b></div>
         <div><small>Orders</small><b>{{ $salesTodayN }}</b></div>
       </div>
     </div>
@@ -78,12 +78,12 @@
     <div class="mh-card mh-month">
       <div class="mh-head">
         <span class="mh-title"><x-icon name="chart" size="16" />This month</span>
-        <a href="{{ route('reports', ['q' => 'month']) }}">Report<x-icon name="chevron-right" size="14" /></a>
+        <a href="{{ route('daybook.month') }}">Open<x-icon name="chevron-right" size="14" /></a>
       </div>
       <div class="mh-stats">
         <div><small>Sales</small><b>{{ $rs($monthSales) }}</b></div>
         <div><small>Expenses</small><b>{{ $rs($monthExp) }}</b></div>
-        <div><small>Profit</small><b class="{{ $profitMonth < 0 ? 'neg' : 'pos' }}">{{ $profitMonth < 0 ? '−' : '' }}{{ $rs(abs($profitMonth)) }}</b></div>
+        <div><small>Real profit</small><b class="{{ $profitMonth < 0 ? 'neg' : 'pos' }}">{{ $profitMonth < 0 ? '−' : '' }}{{ $rs(abs($profitMonth)) }}</b></div>
       </div>
     </div>
   </section>
@@ -243,12 +243,12 @@
             <div class="foot">{!! $pill($dSales, 'vs yesterday') !!}</div>
           </a>
           <a class="stat" href="{{ route('expenses.index') }}">
-            <span class="eyebrow">Expenses today</span><span class="circle sm go"><x-icon name="arrow-out" size="14" /></span>
+            <span class="eyebrow">Daily expenses today</span><span class="circle sm go"><x-icon name="arrow-out" size="14" /></span>
             <div class="stat-val"><span class="ring"><x-icon name="wallet" size="18" /></span><strong><small>Rs.</small>{{ number_format($expToday) }}</strong></div>
             <div class="foot">{!! $pill($dExp, 'vs yesterday', false) !!}</div>
           </a>
           <a class="stat" href="{{ route('reports', ['q' => 'today']) }}">
-            <span class="eyebrow">Profit today</span><span class="circle sm go"><x-icon name="arrow-out" size="14" /></span>
+            <span class="eyebrow">Day cash today</span><span class="circle sm go"><x-icon name="arrow-out" size="14" /></span>
             <div class="stat-val"><span class="ring"><x-icon name="banknote" size="18" /></span><strong class="{{ $profitToday < 0 ? 'neg' : '' }}"><small>Rs.</small>{{ $profitToday < 0 ? '−' : '' }}{{ number_format(abs($profitToday)) }}</strong></div>
             <div class="foot">{!! $pill($dProfit, 'vs yesterday') !!}</div>
           </a>
